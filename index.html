@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GroundFlow — From transaction &gt; into investments</title>
+<meta name="description" content="GroundFlow: inteligência geoespacial para a indústria de bens de consumo. Medimos o impacto real da publicidade no varejo físico." />
+<link rel="icon" type="image/png" href="/logo-dark.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        ink: '#181c28',
+        'ink-2': '#1f2430',
+        'ink-3': '#262b38',
+        brand: { 500: '#24bdef', 600: '#126cf9' },
+        mute: '#aaafb3',
+      },
+      fontFamily: { sans: ['"Work Sans"', 'system-ui', 'sans-serif'] },
+    }
+  }
+}
+</script>
+<style>
+  html, body { background: #181c28; font-family: 'Work Sans', system-ui, sans-serif; }
+  body { -webkit-font-smoothing: antialiased; color: #fff; }
+
+  /* subtle grid background for dark sections */
+  .grid-bg {
+    background-color: #181c28;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    background-position: -1px -1px;
+  }
+  .grid-bg-light {
+    background-color: #ffffff;
+    background-image:
+      linear-gradient(rgba(24,28,40,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(24,28,40,0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  /* Radial glow accents */
+  .glow-cyan {
+    background: radial-gradient(60% 60% at 50% 50%, rgba(36,189,239,0.22), rgba(36,189,239,0) 70%);
+  }
+  .glow-blue {
+    background: radial-gradient(60% 60% at 50% 50%, rgba(18,108,249,0.25), rgba(18,108,249,0) 70%);
+  }
+
+  /* Fade up on scroll */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s cubic-bezier(.22,.61,.36,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal.delay-1 { transition-delay: .08s; }
+  .reveal.delay-2 { transition-delay: .16s; }
+  .reveal.delay-3 { transition-delay: .24s; }
+  .reveal.delay-4 { transition-delay: .32s; }
+
+  /* Marquee / ticker */
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .ticker-track { animation: ticker 40s linear infinite; }
+
+  /* Number styling */
+  .num { font-feature-settings: "tnum","ss01"; letter-spacing: -0.04em; }
+
+  /* Dotted divider */
+  .dot-rule { background-image: radial-gradient(circle, rgba(255,255,255,.25) 1px, transparent 1.5px); background-size: 8px 8px; height: 1px; background-position: 0 0; }
+
+  /* Button hover */
+  .btn-primary { transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 30px -10px rgba(36,189,239,.55); }
+
+  /* Map pulse */
+  @keyframes pulse-ring {
+    0% { transform: scale(.6); opacity: .9; }
+    100% { transform: scale(2.4); opacity: 0; }
+  }
+  .pulse-ring { animation: pulse-ring 2.6s ease-out infinite; }
+
+  /* Tiny blink for terminal cursor */
+  @keyframes blink { 50% { opacity: 0; } }
+  .blink { animation: blink 1s step-end infinite; }
+
+  /* Custom scrollbar (subtle) */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: #181c28; }
+  ::-webkit-scrollbar-thumb { background: #2a3040; border-radius: 8px; }
+  ::-webkit-scrollbar-thumb:hover { background: #343a4d; }
+
+  /* Case rotator */
+  .case-chip { transition: background-color .3s ease, color .3s ease, border-color .3s ease; }
+
+  /* Diagonal clip for hero stat ribbon */
+  .skew-ribbon { transform: skewX(-8deg); }
+
+  /* Pixel noise */
+  .noise::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+    background-size: 3px 3px;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    opacity: .35;
+  }
+
+  /* Logo image styles */
+  .logo-img { display: inline-block; height: 1em; width: auto; vertical-align: middle; }
+</style>
+</head>
+<body class="bg-ink text-white">
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>
