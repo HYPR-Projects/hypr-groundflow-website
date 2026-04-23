@@ -88,9 +88,9 @@ const IconSpark = (p) => (
   </svg>
 );
 
-// Logo usando imagem PNG (branco ou escuro, conforme contexto)
+// Logo usando SVG transparente (branco ou escuro, conforme contexto)
 const IconLogo = ({ className = '', variant = 'white', style = {} }) => {
-  const src = variant === 'dark' ? '/logo-dark.png' : '/logo-white.png';
+  const src = variant === 'dark' ? '/logo-dark.png' : '/logo-groundflow-white.svg';
   return (
     <img src={src} alt="GroundFlow" className={"logo-img " + className} style={style} />
   );
@@ -211,7 +211,7 @@ function Hero() {
         {/* Logo grande em vez de texto */}
         <div className="reveal delay-1">
           <img
-            src="/logo-white.png"
+            src="/logo-groundflow-white.svg"
             alt="GroundFlow"
             className="w-full max-w-[1100px] h-auto"
             style={{ filter: 'drop-shadow(0 2px 20px rgba(36,189,239,0.15))' }}
