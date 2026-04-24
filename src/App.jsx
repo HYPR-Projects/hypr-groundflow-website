@@ -723,7 +723,7 @@ function HeroStat({ label, value }) {
       entries.forEach((entry) => {
         if (entry.isIntersecting && !hasAnimated.current) {
           hasAnimated.current = true;
-          const duration = 1800;
+          const duration = 2500;
           const startTime = performance.now();
           const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 
