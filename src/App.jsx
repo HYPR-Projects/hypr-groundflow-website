@@ -670,10 +670,10 @@ function Hero() {
         <div className="reveal delay-3 mt-20 md:mt-28 relative">
           <div className="dot-rule mb-6" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            <HeroStat label="Transações mapeadas" value="+225M" />
-            <HeroStat label="Shoppers consentidos" value="1.5M" />
+            <HeroStat label="GMV mapeado" value="R$1.91T" />
             <HeroStat label="NF-e analisadas" value="+287M" />
-            <HeroStat label="Market do CPG no Brasil" value="R$280bn" />
+            <HeroStat label="% do PIB coberto" value="83.7%" />
+            <HeroStat label="Lojas mapeadas" value="100.3K" />
           </div>
         </div>
       </div>
