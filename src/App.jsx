@@ -755,6 +755,52 @@ function HeroStat({ label, value }) {
   );
 }
 
+// ---------- ANIMATED NUMBER (count-up reutilizável) ----------
+function AnimatedNumber({ value, decimals = 0, locale = 'pt-BR', duration = 2500, delay = 500 }) {
+  const ref = useRef(null);
+  const [display, setDisplay] = useState(0);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      setDisplay(value);
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+          setTimeout(() => {
+            const startTime = performance.now();
+            const animate = (now) => {
+              const elapsed = now - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              setDisplay(value * easeOutCubic(progress));
+              if (progress < 1) requestAnimationFrame(animate);
+            };
+            requestAnimationFrame(animate);
+          }, delay);
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [value, duration, delay]);
+
+  const formatted = display.toLocaleString(locale, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+
+  return <span ref={ref} className="tabular-nums">{formatted}</span>;
+}
+
 // ---------- CONTEXT BAR ----------
 function ContextBar() {
   const items = ['McDonald\u2019s', 'Coca-Cola', 'Swift', 'Droga Raia', 'Heineken', 'Pão de Açúcar', 'Heinz', 'Mambo', 'Oxxo', 'Listerine', 'Novalgina', 'Hellmann\u2019s'];
@@ -796,7 +842,7 @@ function Problema() {
               <div className="text-[11px] text-ink/40 font-mono">FGV IBRE · ABComm</div>
             </div>
             <div className="num text-[120px] md:text-[160px] lg:text-[220px] xl:text-[260px] font-semibold leading-[0.82] tracking-[-0.05em] mt-6 text-ink">
-              86,4<span className="text-brand-600">%</span>
+              <AnimatedNumber value={86.4} decimals={1} /><span className="text-brand-600">%</span>
             </div>
             <div className="mt-4 text-[18px] md:text-[22px] font-light max-w-md text-ink/80">
               ainda ocorrem em lojas físicas, não no e-commerce.
@@ -819,7 +865,7 @@ function Problema() {
           <div className="reveal delay-3 md:col-span-5 md:border-l border-ink/15 md:pl-10 pt-10 border-t md:border-t-0 md:pt-0">
             <div className="text-[11px] uppercase tracking-[0.2em] text-ink/60 mb-6">Mercado CPG Brasil</div>
             <div className="num text-[88px] md:text-[104px] lg:text-[128px] font-semibold leading-[0.85] tracking-[-0.04em] text-brand-600">
-              R$280<span className="text-[56px] md:text-[64px] lg:text-[72px] align-top pl-1 font-light">bn</span>
+              R$<AnimatedNumber value={280} decimals={0} /><span className="text-[56px] md:text-[64px] lg:text-[72px] align-top pl-1 font-light">bn</span>
             </div>
             <div className="mt-4 flex items-baseline gap-3">
               <span className="num text-[40px] font-semibold text-ink">&lt;1%</span>
