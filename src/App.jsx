@@ -206,7 +206,18 @@ function ContactModal({ isOpen, onClose }) {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [status, setStatus] = useState('idle'); // idle | submitting | success | error
+  const [shouldRender, setShouldRender] = useState(false);
   const firstInputRef = useRef(null);
+
+  // Controla montagem: só renderiza se aberto ou durante animação de saída
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+      return;
+    }
+    const t = setTimeout(() => setShouldRender(false), 320);
+    return () => clearTimeout(t);
+  }, [isOpen]);
 
   // Reset após fechar (espera a animação de saída)
   useEffect(() => {
@@ -269,6 +280,7 @@ function ContactModal({ isOpen, onClose }) {
 
   return (
     <div
+      style={{ visibility: shouldRender ? 'visible' : 'hidden' }}
       className={"fixed inset-0 z-[60] flex items-center justify-center p-4 transition-opacity duration-300 " +
         (isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none")}
       role="dialog"
@@ -500,10 +512,28 @@ function Nav() {
   const { open: openContactModal } = useContactModal();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
+    let raf = null;
+    const update = () => {
+      raf = null;
+      // Hysteresis: entra em "scrolled" acima de 24px, sai abaixo de 8px.
+      // Evita flicker quando o scroll oscila em torno do threshold.
+      setScrolled((prev) => {
+        const y = window.scrollY;
+        if (!prev && y > 24) return true;
+        if (prev && y < 8) return false;
+        return prev;
+      });
+    };
+    const onScroll = () => {
+      if (raf !== null) return;
+      raf = requestAnimationFrame(update);
+    };
+    update();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (raf !== null) cancelAnimationFrame(raf);
+    };
   }, []);
 
   // Header logo aparece exatamente quando a logo grande do hero sai do viewport
@@ -539,8 +569,10 @@ function Nav() {
 
   return (
     <>
-      <nav className={"fixed top-0 inset-x-0 z-40 transition-all duration-300 " +
-        (scrolled || menuOpen ? "backdrop-blur-xl bg-ink/80 border-b border-white/5" : "bg-transparent")}>
+      <nav
+        style={{ transition: 'background-color 300ms ease, backdrop-filter 300ms ease, border-color 300ms ease' }}
+        className={"fixed top-0 inset-x-0 z-40 " +
+          (scrolled || menuOpen ? "backdrop-blur-xl bg-ink/80 border-b border-white/5" : "bg-transparent border-b border-transparent")}>
         <div className="relative max-w-7xl mx-auto px-5 md:px-8 h-16 flex items-center">
           <a
             href="#top"
