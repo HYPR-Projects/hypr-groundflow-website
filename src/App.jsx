@@ -570,7 +570,12 @@ function Casos() {
       label: 'mais receita',
       tag: 'Fast food',
       color: '#DE2A25',
-      insight: 'A bebida complementar gera mais valor do que o item principal do menu.',
+      insight: 'A bebida complementar gera mais valor do que o item-âncora do menu.',
+      ranking: [
+        { name: 'Coca-Cola', score: 100, role: 'hero', note: 'Complementar' },
+        { name: 'Batata frita grande', score: 54, role: 'mid' },
+        { name: 'Big Mac', score: 37, role: 'anchor', note: 'Item-âncora' },
+      ],
     },
     {
       brand: 'Swift',
@@ -581,6 +586,11 @@ function Casos() {
       tag: 'Açougue premium',
       color: '#9b2020',
       insight: 'O corte favorito do brasileiro supera alternativas mais caras em GMV total.',
+      ranking: [
+        { name: 'Picanha', score: 100, role: 'hero', note: 'Preferência local' },
+        { name: 'Alcatra', score: 48, role: 'mid' },
+        { name: 'Filet mignon', score: 27, role: 'anchor', note: 'Corte premium' },
+      ],
     },
     {
       brand: 'Droga Raia',
@@ -591,6 +601,11 @@ function Casos() {
       tag: 'Farmácia',
       color: '#0066B3',
       insight: 'Medicamentos de prescrição crescente redesenham a receita da categoria.',
+      ranking: [
+        { name: 'Ozempic', score: 100, role: 'hero', note: 'Prescrição crescente' },
+        { name: 'Losartana', score: 42, role: 'mid' },
+        { name: 'Novalgina', score: 23, role: 'anchor', note: 'Alta rotação' },
+      ],
     },
   ];
   const [active, setActive] = useState(0);
@@ -658,10 +673,22 @@ function Casos() {
 
           <div className="md:col-span-5 rounded-3xl bg-ink-2 border border-white/10 p-8 md:p-10 flex flex-col justify-between">
             <div>
-              <div className="text-[11px] font-mono text-mute tracking-[0.15em] mb-6">RECEITA RELATIVA · NORMALIZADO</div>
-              <div className="space-y-6">
-                <BrandBar label={current.hero} pct={100} color={current.color} value="100" />
-                <BrandBar label={current.vs} pct={100 / (1 + current.stat/100) * 100 / 100 * 100} color="#3a4053" value={(100 / (1 + current.stat/100)).toFixed(0)} />
+              <div className="flex items-center justify-between mb-6">
+                <div className="text-[11px] font-mono text-mute tracking-[0.15em]">TOP SKUs POR RECEITA</div>
+                <div className="text-[10px] font-mono text-mute/60">ÍNDICE · 100 = LÍDER</div>
+              </div>
+              <div className="space-y-5">
+                {current.ranking.map((item, idx) => (
+                  <RankingRow
+                    key={item.name}
+                    position={idx + 1}
+                    name={item.name}
+                    score={item.score}
+                    role={item.role}
+                    note={item.note}
+                    color={current.color}
+                  />
+                ))}
               </div>
             </div>
             <div className="pt-8 mt-8 border-t border-white/10">
@@ -676,16 +703,29 @@ function Casos() {
   );
 }
 
-function BrandBar({ label, pct, color, value }) {
-  const width = Math.max(8, Math.min(100, pct));
+function RankingRow({ position, name, score, role, note, color }) {
+  const width = Math.max(6, Math.min(100, score));
+  const barColor = role === 'hero' ? color : role === 'anchor' ? '#4a5266' : '#2f3445';
+  const labelColor = role === 'hero' ? 'text-white' : 'text-white/80';
+  const posColor = role === 'hero' ? 'text-white' : 'text-mute/60';
   return (
     <div>
-      <div className="flex justify-between items-baseline mb-2">
-        <span className="text-[14px] text-white">{label}</span>
-        <span className="num text-[13px] text-mute">{value}</span>
+      <div className="flex items-baseline justify-between gap-3 mb-2">
+        <div className="flex items-baseline gap-3 min-w-0">
+          <span className={"num text-[11px] font-mono tracking-wider " + posColor}>
+            {String(position).padStart(2, '0')}
+          </span>
+          <span className={"text-[14px] truncate " + labelColor}>{name}</span>
+          {note && (
+            <span className="text-[10px] font-mono tracking-[0.15em] text-mute/70 uppercase whitespace-nowrap hidden lg:inline">
+              · {note}
+            </span>
+          )}
+        </div>
+        <span className="num text-[13px] text-mute tabular-nums">{score}</span>
       </div>
-      <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden">
-        <div className="h-full rounded-full" style={{ width: width + '%', background: color }} />
+      <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+        <div className="h-full rounded-full transition-all" style={{ width: width + '%', background: barColor }} />
       </div>
     </div>
   );
