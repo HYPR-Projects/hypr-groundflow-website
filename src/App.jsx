@@ -541,7 +541,7 @@ function Nav() {
     <>
       <nav className={"fixed top-0 inset-x-0 z-40 transition-all duration-300 " +
         (scrolled || menuOpen ? "backdrop-blur-xl bg-ink/80 border-b border-white/5" : "bg-transparent")}>
-        <div className="max-w-7xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
+        <div className="relative max-w-7xl mx-auto px-5 md:px-8 h-16 flex items-center">
           <a
             href="#top"
             className={"text-white flex items-center transition-all duration-[600ms] ease-out will-change-transform " +
@@ -552,12 +552,12 @@ function Nav() {
           >
             <IconLogo style={{ height: '22px' }} />
           </a>
-          <div className="hidden md:flex items-center gap-7 text-[13px] text-white/70">
+          <div className="hidden md:flex items-center gap-7 text-[13px] text-white/70 absolute left-1/2 -translate-x-1/2">
             {links.map(([href, label]) => (
               <a key={href} href={href} className="hover:text-white transition-colors">{label}</a>
             ))}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ml-auto">
             <button
               type="button"
               onClick={() => { setMenuOpen(false); openContactModal(); }}
