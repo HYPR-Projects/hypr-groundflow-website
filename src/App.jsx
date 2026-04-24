@@ -647,7 +647,7 @@ function Hero() {
               Real transactions. <span className="font-semibold text-white">Smarter media.</span>
             </p>
             <p className="mt-4 text-mute max-w-lg text-[15px] leading-relaxed">
-              Cada nota fiscal vai além do registro de venda — é o retrato
+              Cada nota fiscal vai além do registro de venda. É o retrato
               de quem compra, o quê, onde e quando. Transformamos dados
               transacionais de milhares de PDVs em inteligência de mídia
               mensurável em vendas reais.
