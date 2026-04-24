@@ -825,11 +825,6 @@ function Solucao() {
           <ResultCard />
         </div>
 
-        <div className="mt-16 md:mt-20 border border-white/10 rounded-2xl bg-white/[0.02] p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
-          <MetricCell kicker="Transações mapeadas" value="+225M" sub="Cross-retailer, no PDV" />
-          <MetricCell kicker="Shoppers consentidos" value="1.5M" sub="Dados compartilhados voluntariamente" />
-          <MetricCell kicker="NF-e processadas" value="+287M" sub="Granularidade SKU · Ticket · PDV" />
-        </div>
       </div>
     </section>
   );
