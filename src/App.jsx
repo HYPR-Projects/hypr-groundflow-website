@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo, useContext, useCallback, createContext } from 'react'
 
 // ═══════════════════════════════════════════════════════════════════════════
 // ICONS
@@ -106,6 +106,333 @@ const IconLogo = ({ className = '', style = {} }) => (
 );
 
 // ═══════════════════════════════════════════════════════════════════════════
+// CONTACT MODAL
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Endpoint do Google Apps Script Web App (deployed como "Anyone").
+// Cole aqui o URL retornado ao publicar o script e o submit passa a gravar no Sheet.
+// Enquanto vazio, o form simula sucesso e loga o payload no console.
+const SHEETS_ENDPOINT = '';
+
+const ContactModalCtx = createContext({ open: () => {} });
+const useContactModal = () => useContext(ContactModalCtx);
+
+// Máscara BR (10 ou 11 dígitos)
+const formatPhone = (value) => {
+  const digits = (value || '').replace(/\D/g, '').slice(0, 11);
+  if (digits.length === 0) return '';
+  if (digits.length <= 2) return `(${digits}`;
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+};
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+const validateForm = (data) => {
+  const e = {};
+  if (!data.nome.trim()) e.nome = 'Informe seu nome';
+  else if (data.nome.trim().length < 2) e.nome = 'Nome muito curto';
+  if (!data.email.trim()) e.email = 'Informe seu email';
+  else if (!EMAIL_RE.test(data.email.trim())) e.email = 'Email inválido';
+  const digits = data.telefone.replace(/\D/g, '');
+  if (!digits) e.telefone = 'Informe seu telefone';
+  else if (digits.length < 10) e.telefone = 'Telefone incompleto';
+  if (!data.empresa.trim()) e.empresa = 'Informe sua empresa';
+  if (!data.investimento) e.investimento = 'Selecione uma opção';
+  return e;
+};
+
+const submitToSheets = async (payload) => {
+  if (!SHEETS_ENDPOINT) {
+    // Stub enquanto o endpoint não está configurado
+    // eslint-disable-next-line no-console
+    console.log('[Contact Form] payload:', payload);
+    await new Promise(r => setTimeout(r, 700));
+    return;
+  }
+  await fetch(SHEETS_ENDPOINT, {
+    method: 'POST',
+    mode: 'no-cors', // Apps Script web app costuma exigir no-cors
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+  });
+};
+
+const inputCls = (hasError) =>
+  "w-full bg-ink border rounded-lg px-4 py-3 text-white text-[14px] outline-none transition-colors placeholder:text-white/30 " +
+  (hasError ? "border-red-400/60 focus:border-red-400" : "border-white/10 focus:border-brand-500");
+
+function Field({ label, error, children, htmlFor }) {
+  return (
+    <div className="mb-4">
+      <label htmlFor={htmlFor} className="block text-white/75 text-[11px] uppercase tracking-[0.12em] mb-1.5 font-medium">{label}</label>
+      {children}
+      {error && <p className="text-red-400 text-[12px] mt-1.5">{error}</p>}
+    </div>
+  );
+}
+
+function SuccessState() {
+  return (
+    <div className="p-9 md:p-11 text-center">
+      <svg viewBox="0 0 52 52" className="w-20 h-20 mx-auto mb-5" aria-hidden="true">
+        <style>{`
+          @keyframes gf-draw-circle { to { stroke-dashoffset: 0; } }
+          @keyframes gf-draw-check  { to { stroke-dashoffset: 0; } }
+          @keyframes gf-pulse       { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+          .gf-sc-circle { animation: gf-draw-circle 0.6s ease-out forwards; }
+          .gf-sc-check  { animation: gf-draw-check 0.35s 0.55s ease-out forwards; }
+          .gf-sc-wrap   { transform-origin: center; animation: gf-pulse 2.4s 0.9s ease-in-out infinite; }
+        `}</style>
+        <g className="gf-sc-wrap">
+          <circle className="gf-sc-circle" cx="26" cy="26" r="24" fill="none" stroke="#24bdef" strokeWidth="2"
+            strokeDasharray="151" strokeDashoffset="151" />
+          <path className="gf-sc-check" d="M14 27l7 7 16-16" fill="none" stroke="#24bdef" strokeWidth="3"
+            strokeLinecap="round" strokeLinejoin="round" strokeDasharray="40" strokeDashoffset="40" />
+        </g>
+      </svg>
+      <h3 className="text-white text-[22px] font-semibold">Tudo certo!</h3>
+      <p className="text-mute text-[14px] mt-2 leading-relaxed">
+        Recebemos seus dados.<br />Em breve entraremos em contato.
+      </p>
+    </div>
+  );
+}
+
+function ContactModal({ isOpen, onClose }) {
+  const initial = { nome: '', email: '', telefone: '', empresa: '', investimento: '' };
+  const [form, setForm] = useState(initial);
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+  const [status, setStatus] = useState('idle'); // idle | submitting | success | error
+  const firstInputRef = useRef(null);
+
+  // Reset após fechar (espera a animação de saída)
+  useEffect(() => {
+    if (isOpen) return;
+    const t = setTimeout(() => {
+      setForm(initial);
+      setErrors({});
+      setTouched({});
+      setStatus('idle');
+    }, 300);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  // Focus, scroll-lock e ESC
+  useEffect(() => {
+    if (!isOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const tFocus = setTimeout(() => firstInputRef.current?.focus(), 120);
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKey);
+      clearTimeout(tFocus);
+    };
+  }, [isOpen, onClose]);
+
+  const updateField = (field, value) => {
+    setForm((prev) => {
+      const next = { ...prev, [field]: value };
+      if (touched[field]) setErrors(validateForm(next));
+      return next;
+    });
+  };
+
+  const handleBlur = (field) => {
+    setTouched((p) => ({ ...p, [field]: true }));
+    setErrors(validateForm(form));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const allTouched = Object.keys(initial).reduce((a, k) => ({ ...a, [k]: true }), {});
+    setTouched(allTouched);
+    const v = validateForm(form);
+    setErrors(v);
+    if (Object.keys(v).length > 0) return;
+
+    setStatus('submitting');
+    try {
+      await submitToSheets({ ...form, timestamp: new Date().toISOString() });
+      setStatus('success');
+      setTimeout(() => onClose(), 3800);
+    } catch (err) {
+      setStatus('error');
+    }
+  };
+
+  return (
+    <div
+      className={"fixed inset-0 z-[60] flex items-center justify-center p-4 transition-opacity duration-300 " +
+        (isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none")}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="contact-modal-title"
+    >
+      <div className="absolute inset-0 bg-ink/85 backdrop-blur-md" onClick={onClose} />
+      <div
+        className={"relative bg-ink-2 border border-white/10 rounded-2xl w-full max-w-md shadow-2xl transition-all duration-300 max-h-[92vh] overflow-y-auto " +
+          (isOpen ? "scale-100 opacity-100 translate-y-0" : "scale-95 opacity-0 translate-y-2")}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors z-10"
+          aria-label="Fechar"
+          type="button"
+        >
+          <IconClose width="20" height="20" />
+        </button>
+
+        {status !== 'success' ? (
+          <form onSubmit={handleSubmit} className="p-7 md:p-9" noValidate>
+            <h3 id="contact-modal-title" className="text-white text-[22px] md:text-[24px] font-semibold leading-tight pr-6">
+              Fale com um especialista
+            </h3>
+            <p className="text-mute text-[13px] mt-2 mb-6">
+              Preencha o formulário e entraremos em contato em breve.
+            </p>
+
+            <Field label="Nome" error={touched.nome && errors.nome} htmlFor="cm-nome">
+              <input
+                id="cm-nome"
+                ref={firstInputRef}
+                type="text"
+                value={form.nome}
+                onChange={(e) => updateField('nome', e.target.value)}
+                onBlur={() => handleBlur('nome')}
+                className={inputCls(touched.nome && errors.nome)}
+                placeholder="Seu nome completo"
+                autoComplete="name"
+                required
+              />
+            </Field>
+
+            <Field label="Email corporativo" error={touched.email && errors.email} htmlFor="cm-email">
+              <input
+                id="cm-email"
+                type="email"
+                value={form.email}
+                onChange={(e) => updateField('email', e.target.value)}
+                onBlur={() => handleBlur('email')}
+                className={inputCls(touched.email && errors.email)}
+                placeholder="voce@empresa.com"
+                autoComplete="email"
+                inputMode="email"
+                required
+              />
+            </Field>
+
+            <Field label="Telefone" error={touched.telefone && errors.telefone} htmlFor="cm-telefone">
+              <input
+                id="cm-telefone"
+                type="tel"
+                value={form.telefone}
+                onChange={(e) => updateField('telefone', formatPhone(e.target.value))}
+                onBlur={() => handleBlur('telefone')}
+                className={inputCls(touched.telefone && errors.telefone)}
+                placeholder="(11) 99999-9999"
+                autoComplete="tel"
+                inputMode="tel"
+                maxLength={15}
+                required
+              />
+            </Field>
+
+            <Field label="Empresa" error={touched.empresa && errors.empresa} htmlFor="cm-empresa">
+              <input
+                id="cm-empresa"
+                type="text"
+                value={form.empresa}
+                onChange={(e) => updateField('empresa', e.target.value)}
+                onBlur={() => handleBlur('empresa')}
+                className={inputCls(touched.empresa && errors.empresa)}
+                placeholder="Nome da empresa"
+                autoComplete="organization"
+                required
+              />
+            </Field>
+
+            <Field label="Investimento previsto" error={touched.investimento && errors.investimento} htmlFor="cm-invest">
+              <select
+                id="cm-invest"
+                value={form.investimento}
+                onChange={(e) => updateField('investimento', e.target.value)}
+                onBlur={() => handleBlur('investimento')}
+                className={inputCls(touched.investimento && errors.investimento) + " appearance-none pr-10 cursor-pointer " + (form.investimento ? "" : "text-white/40")}
+                style={{
+                  backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff80' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>")`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'right 14px center',
+                  backgroundSize: '16px',
+                }}
+                required
+              >
+                <option value="" disabled>Selecione uma faixa</option>
+                <option value="50k-100k">R$ 50k – R$ 100k</option>
+                <option value="100k-250k">R$ 100k – R$ 250k</option>
+                <option value="250k-500k">R$ 250k – R$ 500k</option>
+                <option value="500k-1M">R$ 500k – R$ 1M</option>
+                <option value="acima-1M">Acima de R$ 1M</option>
+                <option value="indefinido">Indefinido</option>
+              </select>
+            </Field>
+
+            {status === 'error' && (
+              <div className="text-red-400 text-[13px] mb-4 bg-red-400/5 border border-red-400/20 rounded-lg px-3 py-2">
+                Não foi possível enviar. Tente novamente ou escreva para contato@groundflow.com.br
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={status === 'submitting'}
+              className="w-full btn-primary inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-brand-500 text-ink font-medium text-[14px] hover:bg-[#3ec8f0] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {status === 'submitting' ? (
+                <>
+                  <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeOpacity="0.25" />
+                    <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  </svg>
+                  Enviando...
+                </>
+              ) : (
+                <>Enviar <IconArrowRight width="16" height="16" strokeWidth="2" /></>
+              )}
+            </button>
+
+            <p className="text-white/40 text-[11px] text-center mt-4 leading-relaxed">
+              Ao enviar, você concorda em ser contatado sobre os serviços do Groundflow.
+            </p>
+          </form>
+        ) : (
+          <SuccessState />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ContactModalProvider({ children }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const open = useCallback(() => setIsOpen(true), []);
+  const close = useCallback(() => setIsOpen(false), []);
+  const value = useMemo(() => ({ open }), [open]);
+  return (
+    <ContactModalCtx.Provider value={value}>
+      {children}
+      <ContactModal isOpen={isOpen} onClose={close} />
+    </ContactModalCtx.Provider>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // SECTIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -170,6 +497,7 @@ function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [showLogo, setShowLogo] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { open: openContactModal } = useContactModal();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -230,10 +558,13 @@ function Nav() {
             ))}
           </div>
           <div className="flex items-center gap-2">
-            <a href="#cta" className={"btn-primary text-[13px] font-medium px-4 py-2 rounded-full bg-brand-500 text-ink hover:bg-[#3ec8f0] " +
+            <button
+              type="button"
+              onClick={() => { setMenuOpen(false); openContactModal(); }}
+              className={"btn-primary text-[13px] font-medium px-4 py-2 rounded-full bg-brand-500 text-ink hover:bg-[#3ec8f0] transition-colors " +
               (menuOpen ? "hidden md:inline-flex" : "inline-flex")}>
               Fale conosco
-            </a>
+            </button>
             <button
               onClick={() => setMenuOpen(v => !v)}
               className="md:hidden inline-flex items-center justify-center w-10 h-10 -mr-2 text-white/90 hover:text-white"
@@ -280,6 +611,7 @@ function Nav() {
 // ---------- HERO ----------
 function Hero() {
   const ref = useReveal();
+  const { open: openContactModal } = useContactModal();
   return (
     <section id="top" ref={ref} className="relative grid-bg overflow-hidden pt-28 pb-24 md:pt-40 md:pb-36">
       <div className="absolute -top-40 -left-40 w-[620px] h-[620px] glow-blue opacity-60 pointer-events-none" />
@@ -326,10 +658,13 @@ function Hero() {
             </p>
           </div>
           <div className="flex gap-3">
-            <a href="#cta" className="btn-primary inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-brand-500 text-ink font-medium text-[14px]">
+            <button
+              type="button"
+              onClick={openContactModal}
+              className="btn-primary inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-brand-500 text-ink font-medium text-[14px] hover:bg-[#3ec8f0] transition-colors">
               Fale conosco
               <IconArrowRight width="16" height="16" strokeWidth="2" />
-            </a>
+            </button>
             <a href="#solucao" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/15 text-white/90 hover:bg-white/5 transition-colors text-[14px]">
               Ver solução
             </a>
@@ -891,6 +1226,7 @@ function Estrategias() {
 // ---------- CTA ----------
 function CTA() {
   const ref = useReveal();
+  const { open: openContactModal } = useContactModal();
   return (
     <section id="cta" ref={ref} className="relative grid-bg py-32 md:py-48 overflow-hidden">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] glow-blue pointer-events-none" />
@@ -908,13 +1244,19 @@ function CTA() {
           Meça o impacto real da mídia no ponto de venda. Transforme cada transação em decisão de investimento.
         </p>
         <div className="reveal delay-3 mt-12 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <a href="mailto:contato@groundflow.com.br" className="btn-primary inline-flex items-center gap-2 px-7 py-4 rounded-full bg-brand-500 text-ink font-medium text-[15px]">
+          <button
+            type="button"
+            onClick={openContactModal}
+            className="btn-primary inline-flex items-center gap-2 px-7 py-4 rounded-full bg-brand-500 text-ink font-medium text-[15px] hover:bg-[#3ec8f0] transition-colors">
             Agende uma demo
             <IconArrowRight width="18" height="18" strokeWidth="2" />
-          </a>
-          <a href="mailto:contato@groundflow.com.br" className="inline-flex items-center gap-2 px-7 py-4 rounded-full border border-white/15 text-white hover:bg-white/5 transition-colors text-[15px]">
+          </button>
+          <button
+            type="button"
+            onClick={openContactModal}
+            className="inline-flex items-center gap-2 px-7 py-4 rounded-full border border-white/15 text-white hover:bg-white/5 transition-colors text-[15px]">
             Fale com um especialista
-          </a>
+          </button>
         </div>
       </div>
     </section>
@@ -976,18 +1318,20 @@ function Footer() {
 // ═══════════════════════════════════════════════════════════════════════════
 function App() {
   return (
-    <div>
-      <Nav />
-      <Hero />
-      <ContextBar />
-      <Problema />
-      <Solucao />
-      <ComoFunciona />
-      <Casos />
-      <Estrategias />
-      <CTA />
-      <Footer />
-    </div>
+    <ContactModalProvider>
+      <div>
+        <Nav />
+        <Hero />
+        <ContextBar />
+        <Problema />
+        <Solucao />
+        <ComoFunciona />
+        <Casos />
+        <Estrategias />
+        <CTA />
+        <Footer />
+      </div>
+    </ContactModalProvider>
   );
 }
 
