@@ -100,13 +100,10 @@ const IconClose = (p) => (
   </svg>
 );
 
-// Logo usando SVG transparente (branco ou escuro, conforme contexto)
-const IconLogo = ({ className = '', variant = 'white', style = {} }) => {
-  const src = variant === 'dark' ? '/logo-dark.png' : '/logo-groundflow-white.svg';
-  return (
-    <img src={src} alt="GroundFlow" className={"logo-img " + className} style={style} />
-  );
-};
+// Logo SVG transparente
+const IconLogo = ({ className = '', style = {} }) => (
+  <img src="/logo-groundflow-white.svg" alt="Groundflow" className={"logo-img " + className} style={style} />
+);
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SECTIONS
@@ -213,7 +210,8 @@ function Nav() {
             ))}
           </div>
           <div className="flex items-center gap-2">
-            <a href="#cta" className="btn-primary text-[13px] font-medium px-4 py-2 rounded-full bg-brand-500 text-ink hover:bg-[#3ec8f0]">
+            <a href="#cta" className={"btn-primary text-[13px] font-medium px-4 py-2 rounded-full bg-brand-500 text-ink hover:bg-[#3ec8f0] " +
+              (menuOpen ? "hidden md:inline-flex" : "inline-flex")}>
               Fale conosco
             </a>
             <button
@@ -284,7 +282,7 @@ function Hero() {
         <div className="reveal delay-1">
           <img
             src="/logo-groundflow-white.svg"
-            alt="GroundFlow"
+            alt="Groundflow"
             className="w-full max-w-[1100px] h-auto"
             style={{ filter: 'drop-shadow(0 2px 20px rgba(36,189,239,0.15))' }}
           />
@@ -321,7 +319,7 @@ function Hero() {
           <div className="dot-rule mb-6" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             <HeroStat label="Transações mapeadas" value="+225M" />
-            <HeroStat label="Usuários ativos" value="1.5M" />
+            <HeroStat label="Shoppers consentidos" value="1.5M" />
             <HeroStat label="NF-e analisadas" value="+287M" />
             <HeroStat label="Market do CPG no Brasil" value="R$280bn" />
           </div>
@@ -408,7 +406,7 @@ function Problema() {
             </div>
             <div className="mt-4 flex items-baseline gap-3">
               <span className="num text-[40px] font-semibold text-ink">&lt;1%</span>
-              <span className="text-[14px] text-ink/70">é vendas digitais mensuráveis</span>
+              <span className="text-[14px] text-ink/70">são vendas digitais mensuráveis</span>
             </div>
             <p className="mt-6 text-[15px] leading-relaxed text-ink/70 max-w-sm">
               Para anunciantes de CPG, entender o impacto real da mídia nos canais de venda físicos sempre foi uma incógnita. Até agora.
@@ -444,7 +442,7 @@ function Solucao() {
           </span>
         </h2>
         <p className="reveal delay-2 mt-6 text-mute text-[16px] md:text-[18px] max-w-2xl leading-relaxed">
-          Cruzamos dados de mídia veiculada com dados transacionais no nível de SKU, storechain e PDV. Metodologia aberta, com grupos exposto e controle, agnóstica ao varejista.
+          Cruzamos mídia veiculada com dados transacionais no nível de SKU, storechain e PDV. Metodologia aberta, com grupos exposto e controle, agnóstica ao varejista.
         </p>
 
         <div className="reveal delay-3 mt-16 grid md:grid-cols-[1fr_auto_1fr_auto_1fr] gap-6 items-stretch">
@@ -471,13 +469,13 @@ function Solucao() {
             ]}
             accent="cyan"
           />
-          <Connector equals />
+          <Connector type="equals" />
           <ResultCard />
         </div>
 
         <div className="mt-16 md:mt-20 border border-white/10 rounded-2xl bg-white/[0.02] p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
           <MetricCell kicker="Transações mapeadas" value="+225M" sub="Cross-retailer, no PDV" />
-          <MetricCell kicker="Usuários ativos" value="1.5M" sub="Shoppers com consentimento" />
+          <MetricCell kicker="Shoppers consentidos" value="1.5M" sub="Dados compartilhados voluntariamente" />
           <MetricCell kicker="NF-e processadas" value="+287M" sub="Granularidade SKU · Ticket · PDV" />
         </div>
       </div>
@@ -510,18 +508,17 @@ function DataCard({ kicker, title, fields, accent = 'cyan' }) {
   );
 }
 
-function Connector({ equals = false }) {
+function Connector({ type = 'cross' }) {
   return (
     <div className="hidden md:flex items-center justify-center text-brand-500 self-center">
-      {equals ? (
+      {type === 'equals' ? (
         <div className="flex flex-col gap-1">
           <span className="block w-6 h-0.5 bg-brand-500" />
           <span className="block w-6 h-0.5 bg-brand-500" />
         </div>
       ) : (
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <path d="M4 14h20M4 14l4-4M4 14l4 4" stroke="currentColor" strokeWidth="1.5"/>
-          <path d="M24 14l-4-4M24 14l-4 4" stroke="currentColor" strokeWidth="1.5"/>
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M5 5l12 12M17 5L5 17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
         </svg>
       )}
     </div>
@@ -537,9 +534,9 @@ function ResultCard() {
           <span className="w-1.5 h-1.5 rounded-full bg-ink" />
           <span className="text-[10px] font-mono tracking-[0.25em] text-ink/80">SELLOUT REPORT</span>
         </div>
-        <div className="text-[13px] text-ink/80 mb-2">Market Share Lift</div>
-        <div className="num text-[72px] font-semibold leading-none tracking-[-0.04em]">+6%</div>
-        <div className="mt-4 text-[12px] text-ink/80">em até <span className="font-semibold">14 dias</span></div>
+        <div className="text-[13px] text-ink/80 mb-2">Lift de vendas · SKU</div>
+        <div className="num text-[72px] font-semibold leading-none tracking-[-0.04em]">até +19%</div>
+        <div className="mt-4 text-[12px] text-ink/80">mensurado em até <span className="font-semibold">14 dias</span></div>
 
         <svg viewBox="0 0 120 40" className="mt-5 w-full h-10">
           <path d="M2 32 L20 28 L38 26 L56 22 L74 16 L92 10 L118 4" stroke="#181c28" strokeWidth="2" fill="none"/>
@@ -569,7 +566,7 @@ function ComoFunciona() {
       icon: IconReceipt,
       title: 'Aquisição de dados',
       desc: 'Integramos dados transacionais de milhares de PDVs no nível de SKU, ticket, storechain e categoria. Base agnóstica ao varejista, cobertura continental.',
-      tags: ['SKU', 'STORECHAIN', 'TICKET', 'CATEGORIA'],
+      tags: ['SKU', 'STORECHAIN', 'TICKET', 'CATEGORY'],
     },
     {
       n: '02',
@@ -593,11 +590,11 @@ function ComoFunciona() {
           <div>
             <SectionLabel dark label="03 / COMO FUNCIONA" />
             <h2 className="reveal delay-1 mt-6 text-[36px] md:text-[56px] font-light leading-[1.02] tracking-[-0.02em] max-w-3xl">
-              Três camadas. <span className="font-semibold">Uma arquitetura</span> agnóstica ao varejista.
+              Três etapas. <span className="font-semibold">Uma arquitetura</span> agnóstica ao varejista.
             </h2>
           </div>
           <div className="reveal delay-2 text-[13px] text-ink/60 max-w-xs">
-            Dados de primeira parte, consentidos e rastreáveis, do primeiro touch de mídia até o ticket final.
+            Dados de primeira parte, com consentimento e rastreáveis, do primeiro contato de mídia até a nota fiscal.
           </div>
         </div>
 
@@ -636,6 +633,7 @@ function Casos() {
   const cases = [
     {
       brand: 'McDonald\u2019s',
+      article: 'No',
       hero: 'Coca-Cola',
       vs: 'Big Mac',
       stat: 173,
@@ -651,6 +649,7 @@ function Casos() {
     },
     {
       brand: 'Swift',
+      article: 'Na',
       hero: 'Picanha',
       vs: 'Filet mignon',
       stat: 266,
@@ -666,6 +665,7 @@ function Casos() {
     },
     {
       brand: 'Droga Raia',
+      article: 'Na',
       hero: 'Ozempic',
       vs: 'Novalgina',
       stat: 343,
@@ -694,7 +694,7 @@ function Casos() {
             </h2>
           </div>
           <div className="reveal delay-2 text-[11px] font-mono text-mute tracking-[0.15em] md:text-right">
-            AMOSTRA · SWIFT · DROGA RAIA · MAMBO<br/>
+            AMOSTRA · MCDONALD’S · SWIFT · DROGA RAIA<br/>
             MÉTODO · GROUNDFLOW SELLOUT DATA
           </div>
         </div>
@@ -726,7 +726,7 @@ function Casos() {
                 </div>
                 <span className="text-[11px] font-mono text-mute/70">CASE {String(active+1).padStart(2,'0')} / 03</span>
               </div>
-              <div className="text-[15px] text-white/70 mb-3">No {current.brand},</div>
+              <div className="text-[15px] text-white/70 mb-3">{current.article} {current.brand},</div>
               <div className="text-[32px] md:text-[44px] font-light leading-[1.02] tracking-[-0.02em] mb-6">
                 <span className="font-semibold">{current.hero}</span> gera
                 <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1">
@@ -841,7 +841,7 @@ function Estrategias() {
             </h2>
           </div>
           <div className="reveal delay-2 text-[13px] text-ink/60 max-w-xs">
-            Quatro abordagens para construir audiências que movem a agulha no PDV.
+            Quatro abordagens para construir audiências que geram impacto mensurável no PDV.
           </div>
         </div>
 
@@ -884,7 +884,7 @@ function CTA() {
           <span className="block font-semibold">da sua marca.</span>
         </h2>
         <p className="reveal delay-2 mt-8 text-[16px] md:text-[18px] text-mute max-w-xl mx-auto leading-relaxed">
-          Meça o impacto real da mídia no ponto de venda. Transforme cada transação em inteligência acionável.
+          Meça o impacto real da mídia no ponto de venda. Transforme cada transação em decisão de investimento.
         </p>
         <div className="reveal delay-3 mt-12 flex flex-col sm:flex-row items-center justify-center gap-3">
           <a href="mailto:contato@groundflow.com.br" className="btn-primary inline-flex items-center gap-2 px-7 py-4 rounded-full bg-brand-500 text-ink font-medium text-[15px]">
@@ -942,8 +942,8 @@ function Footer() {
           </div>
         </div>
         <div className="mt-14 pt-6 border-t border-white/5 flex flex-col md:flex-row gap-3 justify-between text-[12px] text-mute/60">
-          <div>© 2026 GroundFlow · Todos os direitos reservados</div>
-          <div className="font-mono tracking-[0.2em]">#181C28 · #24BDEF · #126CF9</div>
+          <div>© 2026 Groundflow · Todos os direitos reservados</div>
+          <div>contato@groundflow.com.br</div>
         </div>
       </div>
     </footer>
