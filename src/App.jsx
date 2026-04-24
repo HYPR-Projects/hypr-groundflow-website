@@ -168,12 +168,17 @@ function NumDisplay({ value, decimals = 0, prefix = '', suffix = '', className =
 // ---------- NAV ----------
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [showLogo, setShowLogo] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 12);
+      // Logo reaparece no header quando o usuário sai da primeira dobra (~70% do viewport)
+      setShowLogo(window.scrollY > window.innerHeight * 0.7);
+    };
     onScroll();
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -201,7 +206,14 @@ function Nav() {
       <nav className={"fixed top-0 inset-x-0 z-40 transition-all duration-300 " +
         (scrolled || menuOpen ? "backdrop-blur-xl bg-ink/80 border-b border-white/5" : "bg-transparent")}>
         <div className="max-w-7xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
-          <a href="#top" className="text-white flex items-center" style={{ height: '28px' }}>
+          <a
+            href="#top"
+            className={"text-white flex items-center transition-all duration-[600ms] ease-out will-change-transform " +
+              (showLogo ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-3 pointer-events-none")}
+            style={{ height: '28px' }}
+            aria-hidden={!showLogo}
+            tabIndex={showLogo ? 0 : -1}
+          >
             <IconLogo style={{ height: '22px' }} />
           </a>
           <div className="hidden md:flex items-center gap-7 text-[13px] text-white/70">
