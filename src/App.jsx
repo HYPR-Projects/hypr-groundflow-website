@@ -112,7 +112,7 @@ const IconLogo = ({ className = '', style = {} }) => (
 // Endpoint do Google Apps Script Web App (deployed como "Anyone").
 // Cole aqui o URL retornado ao publicar o script e o submit passa a gravar no Sheet.
 // Enquanto vazio, o form simula sucesso e loga o payload no console.
-const SHEETS_ENDPOINT = '';
+const SHEETS_ENDPOINT = 'https://script.google.com/a/macros/hypr.mobi/s/AKfycbyYfHW6esVW-ZbpyLrJbEqus2VEGCHSC_Y3uDY061mEKgNz0mwdVP-Vz4fF8fyYyf7Z/exec';
 
 const ContactModalCtx = createContext({ open: () => {} });
 const useContactModal = () => useContext(ContactModalCtx);
