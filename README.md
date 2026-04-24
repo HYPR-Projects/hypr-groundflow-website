@@ -1,6 +1,6 @@
-# HYPR GroundFlow — Landing Page
+# Groundflow — Landing Page
 
-Landing do produto GroundFlow da HYPR.
+Landing do Groundflow: a camada de medição de vendas reais para CPG.
 
 ## Stack
 

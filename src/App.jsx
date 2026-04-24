@@ -196,7 +196,7 @@ function Hero() {
       <div className="absolute -bottom-40 -right-40 w-[620px] h-[620px] glow-cyan opacity-50 pointer-events-none" />
 
       <div className="absolute top-24 right-8 md:right-16 text-[11px] text-mute/70 tracking-[0.25em] font-mono hidden md:block">
-        LAT −23.5505 / LNG −46.6333
+        SKU · 7891024131602 / BRL 12,90
       </div>
       <div className="absolute bottom-10 left-8 md:left-16 text-[11px] text-mute/70 tracking-[0.25em] font-mono hidden md:block">
         BR / SP / BELA VISTA
@@ -205,7 +205,7 @@ function Hero() {
       <div className="relative max-w-7xl mx-auto px-5 md:px-8">
         <div className="reveal flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-brand-500 mb-8">
           <span className="w-6 h-px bg-brand-500" />
-          Geospatial intelligence for CPG
+          The measurement layer for real sales
         </div>
 
         {/* Logo grande em vez de texto */}
@@ -228,9 +228,10 @@ function Hero() {
               <span className="font-semibold text-white">into investments.</span>
             </p>
             <p className="mt-4 text-mute max-w-lg text-[15px] leading-relaxed">
-              O futuro do pixel de mídia é a coordenada geoespacial.
-              Medimos o impacto real da publicidade no varejo físico —
-              onde 86,4% das vendas acontecem.
+              Cada nota fiscal vai além do registro de venda — é o retrato
+              de quem compra, o quê, onde e quando. Transformamos dados
+              transacionais de milhares de PDVs em inteligência de mídia
+              mensurável em vendas reais.
             </p>
           </div>
           <div className="flex gap-3">
@@ -274,7 +275,7 @@ function ContextBar() {
   return (
     <section className="bg-ink border-y border-white/5 py-8 overflow-hidden">
       <div className="text-[10px] uppercase tracking-[0.3em] text-mute text-center mb-6">
-        Analisando comportamento de shoppers em marcas como
+        Medindo vendas reais em categorias como
       </div>
       <div className="relative">
         <div className="ticker-track flex gap-14 w-max text-white/60">
@@ -365,31 +366,31 @@ function Solucao() {
       <div className="max-w-7xl mx-auto px-5 md:px-8">
         <SectionLabel label="02 / A SOLUÇÃO" />
         <h2 className="reveal delay-1 mt-6 text-[36px] md:text-[64px] font-light leading-[1.02] tracking-[-0.025em] max-w-5xl">
-          A propensão de compras agora tem
+          Performance de mídia agora tem
           <span className="relative inline-block ml-3">
-            <span className="font-semibold text-brand-500">coordenadas.</span>
+            <span className="font-semibold text-brand-500">prova de venda.</span>
           </span>
         </h2>
         <p className="reveal delay-2 mt-6 text-mute text-[16px] md:text-[18px] max-w-2xl leading-relaxed">
-          Integramos dados de localização geoespacial com dados de consumo in-store via NF-e, fornecidos diretamente pelos consumidores. Uma arquitetura agnóstica ao varejista.
+          Cruzamos dados de mídia veiculada com dados transacionais no nível de SKU, storechain e PDV. Metodologia aberta, com grupos exposto e controle, agnóstica ao varejista.
         </p>
 
         <div className="reveal delay-3 mt-16 grid md:grid-cols-[1fr_auto_1fr_auto_1fr] gap-6 items-stretch">
           <DataCard
-            kicker="LOCATION DATA"
-            title="Dados de localização"
+            kicker="MEDIA DATA"
+            title="Mídia veiculada"
             fields={[
-              ['LAT; LNG', '−23.5505; −46.6333'],
-              ['STORE CHAIN', 'PÃO DE AÇÚCAR'],
-              ['CATEGORY', 'SUPERMERCADO'],
-              ['DISTRICT', 'BELA VISTA · SP'],
+              ['CAMPAIGN', 'ATIVAÇÃO · Q2'],
+              ['IMPRESSIONS', '2.8M'],
+              ['STORECHAIN', '+180 PDVs'],
+              ['REGION', 'SP · RS'],
             ]}
             accent="blue"
           />
           <Connector />
           <DataCard
-            kicker="CONSUMPTION DATA"
-            title="Consumo via NF-e"
+            kicker="TRANSACTION DATA"
+            title="Venda real no PDV"
             fields={[
               ['SKU', '7891024131602'],
               ['CATEGORY', 'BEBIDAS'],
@@ -403,9 +404,9 @@ function Solucao() {
         </div>
 
         <div className="mt-16 md:mt-20 border border-white/10 rounded-2xl bg-white/[0.02] p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
-          <MetricCell kicker="Transações mapeadas" value="+225M" sub="Cross-retailer, in-store" />
+          <MetricCell kicker="Transações mapeadas" value="+225M" sub="Cross-retailer, no PDV" />
           <MetricCell kicker="Usuários ativos" value="1.5M" sub="Shoppers com consentimento" />
-          <MetricCell kicker="NF-e processadas" value="+287M" sub="Granularidade por SKU" />
+          <MetricCell kicker="NF-e processadas" value="+287M" sub="Granularidade SKU · Ticket · PDV" />
         </div>
       </div>
     </section>
@@ -493,24 +494,24 @@ function ComoFunciona() {
   const steps = [
     {
       n: '01',
-      icon: IconPin,
-      title: 'Dados de localização',
-      desc: 'Coordenadas geoespaciais precisas que mapeiam o comportamento do shopper no mundo físico.',
-      tags: ['LAT/LNG', 'LOJA', 'CATEGORIA', 'BAIRRO'],
+      icon: IconReceipt,
+      title: 'Aquisição de dados',
+      desc: 'Integramos dados transacionais de milhares de PDVs no nível de SKU, ticket, storechain e categoria. Base agnóstica ao varejista, cobertura continental.',
+      tags: ['SKU', 'STORECHAIN', 'TICKET', 'CATEGORIA'],
     },
     {
       n: '02',
-      icon: IconReceipt,
-      title: 'Consumo via NF-e',
-      desc: 'Notas fiscais eletrônicas compartilhadas pelos consumidores, direto da fonte — sem depender de dados proprietários do varejista.',
-      tags: ['SKU', 'CATEGORIA', 'PREÇO', 'RECEITA'],
+      icon: IconTarget,
+      title: 'Modelagem + ativação',
+      desc: 'Identificamos PDVs com maior potencial de lift de vendas. Definimos grupos exposto e controle. Ativamos mídia direcionada aos dispositivos certos.',
+      tags: ['EXPOSTO', 'CONTROLE', 'O2O', 'AUDIÊNCIA'],
     },
     {
       n: '03',
       icon: IconChart,
-      title: 'Relatório de sellout',
-      desc: 'Market share lift mensurado em até 14 dias. Pela primeira vez, marcas medem o impacto real da mídia no PDV.',
-      tags: ['MKT SHARE', 'LIFT', 'RECEITA', '14 DIAS'],
+      title: 'Lift de vendas',
+      desc: 'Comparamos desempenho entre exposto e controle. Medimos lift no SKU e na categoria. Resultado em vendas reais, mensurado em até 14 dias.',
+      tags: ['LIFT SKU', 'LIFT CATEGORIA', 'GMV', '14 DIAS'],
     },
   ];
   return (
@@ -607,7 +608,7 @@ function Casos() {
           </div>
           <div className="reveal delay-2 text-[11px] font-mono text-mute tracking-[0.15em] md:text-right">
             AMOSTRA · SWIFT · DROGA RAIA · MAMBO<br/>
-            MÉTODO · HYPR SELLOUT DATA
+            MÉTODO · GROUNDFLOW SELLOUT DATA
           </div>
         </div>
 
@@ -791,7 +792,7 @@ function Footer() {
               From transaction <IconArrowRight width="14" height="14" className="inline align-middle text-brand-500" /> into investments.
             </p>
             <p className="text-mute/60 text-[13px] max-w-sm mt-4 leading-relaxed">
-              Inteligência geoespacial para a indústria de bens de consumo.
+              A camada de medição de vendas reais para a indústria de bens de consumo.
             </p>
           </div>
           <div className="md:col-span-2">
