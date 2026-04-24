@@ -695,10 +695,59 @@ function Hero() {
 }
 
 function HeroStat({ label, value }) {
+  const ref = useRef(null);
+  const [displayValue, setDisplayValue] = useState(value);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const match = value.match(/^([^\d.-]*)([\d.]+)(.*)$/);
+    if (!match) {
+      setDisplayValue(value);
+      return;
+    }
+
+    const prefix = match[1];
+    const targetNum = parseFloat(match[2]);
+    const suffix = match[3];
+    const decimals = (match[2].split('.')[1] || '').length;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      setDisplayValue(value);
+      return;
+    }
+
+    setDisplayValue(`${prefix}${(0).toFixed(decimals)}${suffix}`);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          const duration = 1800;
+          const startTime = performance.now();
+          const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+          const animate = (now) => {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const current = targetNum * easeOutCubic(progress);
+            setDisplayValue(`${prefix}${current.toFixed(decimals)}${suffix}`);
+            if (progress < 1) requestAnimationFrame(animate);
+          };
+          requestAnimationFrame(animate);
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [value]);
+
   return (
-    <div>
+    <div ref={ref}>
       <div className="text-[10px] uppercase tracking-[0.2em] text-mute mb-2">{label}</div>
-      <div className="num text-[32px] md:text-[40px] font-semibold text-white">{value}</div>
+      <div className="num text-[32px] md:text-[40px] font-semibold text-white tabular-nums">{displayValue}</div>
     </div>
   );
 }
