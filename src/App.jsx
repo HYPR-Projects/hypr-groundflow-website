@@ -1,6 +1,17 @@
 import { useState, useEffect, useRef, useMemo, useContext, useCallback, createContext } from 'react'
 
 // ═══════════════════════════════════════════════════════════════════════════
+// ANALYTICS HELPER
+// ═══════════════════════════════════════════════════════════════════════════
+// Wrapper seguro do gtag — não quebra se o script ainda não carregou ou
+// se algum ad-blocker bloqueou o Google Analytics.
+const track = (event, params = {}) => {
+  if (typeof window === 'undefined') return;
+  if (typeof window.gtag !== 'function') return;
+  try { window.gtag('event', event, params); } catch (_) { /* silencioso */ }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
 // ICONS
 // ═══════════════════════════════════════════════════════════════════════════
 const iconBase = { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.5, strokeLinecap: 'round', strokeLinejoin: 'round' };
@@ -200,7 +211,7 @@ function SuccessState() {
   );
 }
 
-function ContactModal({ isOpen, onClose }) {
+function ContactModal({ isOpen, onClose, onSuccess }) {
   const initial = { nome: '', email: '', telefone: '', empresa: '', investimento: '' };
   const [form, setForm] = useState(initial);
   const [errors, setErrors] = useState({});
@@ -208,11 +219,15 @@ function ContactModal({ isOpen, onClose }) {
   const [status, setStatus] = useState('idle'); // idle | submitting | success | error
   const [shouldRender, setShouldRender] = useState(false);
   const firstInputRef = useRef(null);
+  const hasStartedRef = useRef(false); // dispara contact_form_start uma vez por sessão do modal
+  const trackedValidationErrorsRef = useRef(new Set()); // evita disparar erro do mesmo campo várias vezes
 
   // Controla montagem: só renderiza se aberto ou durante animação de saída
   useEffect(() => {
     if (isOpen) {
       setShouldRender(true);
+      hasStartedRef.current = false;
+      trackedValidationErrorsRef.current = new Set();
       return;
     }
     const t = setTimeout(() => setShouldRender(false), 320);
@@ -248,6 +263,10 @@ function ContactModal({ isOpen, onClose }) {
   }, [isOpen, onClose]);
 
   const updateField = (field, value) => {
+    if (!hasStartedRef.current && value.length > 0) {
+      hasStartedRef.current = true;
+      track('contact_form_start', { first_field: field });
+    }
     setForm((prev) => {
       const next = { ...prev, [field]: value };
       if (touched[field]) setErrors(validateForm(next));
@@ -257,7 +276,12 @@ function ContactModal({ isOpen, onClose }) {
 
   const handleBlur = (field) => {
     setTouched((p) => ({ ...p, [field]: true }));
-    setErrors(validateForm(form));
+    const v = validateForm(form);
+    setErrors(v);
+    if (v[field] && !trackedValidationErrorsRef.current.has(field)) {
+      trackedValidationErrorsRef.current.add(field);
+      track('contact_form_validation_error', { field, error: v[field] });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -266,15 +290,19 @@ function ContactModal({ isOpen, onClose }) {
     setTouched(allTouched);
     const v = validateForm(form);
     setErrors(v);
+    track('contact_form_submit_attempt', { has_errors: Object.keys(v).length > 0, error_count: Object.keys(v).length });
     if (Object.keys(v).length > 0) return;
 
     setStatus('submitting');
     try {
       await submitToSheets({ ...form, timestamp: new Date().toISOString() });
       setStatus('success');
+      track('contact_form_submit_success');
+      if (typeof onSuccess === 'function') onSuccess();
       setTimeout(() => onClose(), 3800);
     } catch (err) {
       setStatus('error');
+      track('contact_form_submit_error', { message: String(err && err.message || err).slice(0, 120) });
     }
   };
 
@@ -433,13 +461,22 @@ function ContactModal({ isOpen, onClose }) {
 
 function ContactModalProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
-  const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => setIsOpen(false), []);
+  const lastStatusRef = useRef('idle'); // idle | success — setado pelo modal antes do close
+  const open = useCallback((source = 'unknown') => {
+    track('contact_open', { source });
+    lastStatusRef.current = 'idle';
+    setIsOpen(true);
+  }, []);
+  const close = useCallback(() => {
+    track('contact_close', { status: lastStatusRef.current === 'success' ? 'completed' : 'abandoned' });
+    setIsOpen(false);
+  }, []);
+  const markSuccess = useCallback(() => { lastStatusRef.current = 'success'; }, []);
   const value = useMemo(() => ({ open }), [open]);
   return (
     <ContactModalCtx.Provider value={value}>
       {children}
-      <ContactModal isOpen={isOpen} onClose={close} />
+      <ContactModal isOpen={isOpen} onClose={close} onSuccess={markSuccess} />
     </ContactModalCtx.Provider>
   );
 }
@@ -586,13 +623,17 @@ function Nav() {
           </a>
           <div className="hidden md:flex items-center gap-7 text-[13px] text-white/70 absolute left-1/2 -translate-x-1/2">
             {links.map(([href, label]) => (
-              <a key={href} href={href} className="hover:text-white transition-colors">{label}</a>
+              <a
+                key={href}
+                href={href}
+                onClick={() => track('nav_click', { link: label, location: 'header_desktop' })}
+                className="hover:text-white transition-colors">{label}</a>
             ))}
           </div>
           <div className="flex items-center gap-2 ml-auto">
             <button
               type="button"
-              onClick={() => { setMenuOpen(false); openContactModal(); }}
+              onClick={() => { setMenuOpen(false); openContactModal('header'); }}
               className={"btn-primary text-[13px] font-medium px-4 py-2 rounded-full bg-brand-500 text-ink hover:bg-[#3ec8f0] transition-colors " +
               (menuOpen ? "hidden md:inline-flex" : "inline-flex")}>
               Fale conosco
@@ -623,7 +664,10 @@ function Nav() {
               <a
                 key={href}
                 href={href}
-                onClick={() => setMenuOpen(false)}
+                onClick={() => {
+                  track('nav_click', { link: label, location: 'mobile_menu' });
+                  setMenuOpen(false);
+                }}
                 className="text-white text-[32px] font-light tracking-[-0.02em] py-3 border-b border-white/10 hover:text-brand-500 transition-colors"
                 style={{ transitionDelay: menuOpen ? `${i * 40}ms` : '0ms' }}
               >
@@ -690,6 +734,7 @@ function Hero() {
               href="#solucao"
               onClick={(e) => {
                 e.preventDefault();
+                track('cta_click', { cta: 'ver_solucao', location: 'hero' });
                 const target = document.getElementById('solucao');
                 if (!target) return;
                 const startY = window.scrollY;
@@ -1380,14 +1425,14 @@ function CTA() {
         <div className="reveal delay-3 mt-12 flex flex-col sm:flex-row items-center justify-center gap-3">
           <button
             type="button"
-            onClick={openContactModal}
+            onClick={() => openContactModal('footer_demo')}
             className="btn-primary inline-flex items-center gap-2 px-7 py-4 rounded-full bg-brand-500 text-ink font-medium text-[15px] hover:bg-[#3ec8f0] transition-colors">
             Agende uma demo
             <IconArrowRight width="18" height="18" strokeWidth="2" />
           </button>
           <button
             type="button"
-            onClick={openContactModal}
+            onClick={() => openContactModal('footer_especialista')}
             className="inline-flex items-center gap-2 px-7 py-4 rounded-full border border-white/15 text-white hover:bg-white/5 transition-colors text-[15px]">
             Fale com um especialista
           </button>
@@ -1451,6 +1496,24 @@ function Footer() {
 // APP
 // ═══════════════════════════════════════════════════════════════════════════
 function App() {
+  // Tracking global de visibilidade de seções (dispara uma vez por seção por sessão)
+  useEffect(() => {
+    const sections = document.querySelectorAll('section[id]');
+    if (!sections.length) return;
+    const seen = new Set();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const id = entry.target.id;
+        if (entry.isIntersecting && !seen.has(id)) {
+          seen.add(id);
+          track('section_view', { section: id });
+        }
+      });
+    }, { threshold: 0.3 });
+    sections.forEach((s) => io.observe(s));
+    return () => io.disconnect();
+  }, []);
+
   return (
     <ContactModalProvider>
       <div>
