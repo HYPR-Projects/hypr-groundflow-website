@@ -644,11 +644,7 @@ function Hero() {
         <div className="reveal delay-2 mt-10 md:mt-14 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
           <div>
             <p className="text-white/80 text-[22px] md:text-[28px] font-light leading-tight max-w-xl">
-              Real transactions.
-              <span className="inline-flex mx-3 align-middle text-brand-500">
-                <IconArrowRight width="30" height="30" />
-              </span>
-              <span className="font-semibold text-white">Smarter media.</span>
+              Real transactions. <span className="font-semibold text-white">Smarter media.</span>
             </p>
             <p className="mt-4 text-mute max-w-lg text-[15px] leading-relaxed">
               Cada nota fiscal vai além do registro de venda — é o retrato
@@ -1274,7 +1270,7 @@ function Footer() {
               <IconLogo style={{ height: '28px' }} />
             </div>
             <p className="text-mute text-[14px] max-w-sm leading-relaxed">
-              Real transactions. <IconArrowRight width="14" height="14" className="inline align-middle text-brand-500" /> Smarter media.
+              Real transactions. Smarter media.
             </p>
             <p className="text-mute/60 text-[13px] max-w-sm mt-4 leading-relaxed">
               A camada de medição de vendas reais para a indústria de bens de consumo.
