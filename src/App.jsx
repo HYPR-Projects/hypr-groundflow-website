@@ -88,6 +88,18 @@ const IconSpark = (p) => (
   </svg>
 );
 
+const IconMenu = (p) => (
+  <svg {...iconBase} {...p}>
+    <path d="M4 7h16M4 12h16M4 17h16"/>
+  </svg>
+);
+
+const IconClose = (p) => (
+  <svg {...iconBase} {...p}>
+    <path d="M6 6l12 12M18 6L6 18"/>
+  </svg>
+);
+
 // Logo usando SVG transparente (branco ou escuro, conforme contexto)
 const IconLogo = ({ className = '', variant = 'white', style = {} }) => {
   const src = variant === 'dark' ? '/logo-dark.png' : '/logo-groundflow-white.svg';
@@ -159,31 +171,91 @@ function NumDisplay({ value, decimals = 0, prefix = '', suffix = '', className =
 // ---------- NAV ----------
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [menuOpen]);
+
+  const links = [
+    ['#problema', 'Problema'],
+    ['#solucao', 'Solução'],
+    ['#como-funciona', 'Como funciona'],
+    ['#casos', 'Casos'],
+    ['#estrategias', 'Estratégias'],
+  ];
+
   return (
-    <nav className={"fixed top-0 inset-x-0 z-40 transition-all duration-300 " +
-      (scrolled ? "backdrop-blur-xl bg-ink/80 border-b border-white/5" : "bg-transparent")}>
-      <div className="max-w-7xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
-        <a href="#top" className="text-white flex items-center" style={{ height: '28px' }}>
-          <IconLogo style={{ height: '22px' }} />
-        </a>
-        <div className="hidden md:flex items-center gap-7 text-[13px] text-white/70">
-          <a href="#problema" className="hover:text-white transition-colors">Problema</a>
-          <a href="#solucao" className="hover:text-white transition-colors">Solução</a>
-          <a href="#como-funciona" className="hover:text-white transition-colors">Como funciona</a>
-          <a href="#casos" className="hover:text-white transition-colors">Casos</a>
-          <a href="#estrategias" className="hover:text-white transition-colors">Estratégias</a>
+    <>
+      <nav className={"fixed top-0 inset-x-0 z-40 transition-all duration-300 " +
+        (scrolled || menuOpen ? "backdrop-blur-xl bg-ink/80 border-b border-white/5" : "bg-transparent")}>
+        <div className="max-w-7xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
+          <a href="#top" className="text-white flex items-center" style={{ height: '28px' }}>
+            <IconLogo style={{ height: '22px' }} />
+          </a>
+          <div className="hidden md:flex items-center gap-7 text-[13px] text-white/70">
+            {links.map(([href, label]) => (
+              <a key={href} href={href} className="hover:text-white transition-colors">{label}</a>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <a href="#cta" className="btn-primary text-[13px] font-medium px-4 py-2 rounded-full bg-brand-500 text-ink hover:bg-[#3ec8f0]">
+              Fale conosco
+            </a>
+            <button
+              onClick={() => setMenuOpen(v => !v)}
+              className="md:hidden inline-flex items-center justify-center w-10 h-10 -mr-2 text-white/90 hover:text-white"
+              aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+              aria-expanded={menuOpen}
+            >
+              {menuOpen ? <IconClose width="22" height="22" /> : <IconMenu width="22" height="22" />}
+            </button>
+          </div>
         </div>
-        <a href="#cta" className="btn-primary text-[13px] font-medium px-4 py-2 rounded-full bg-brand-500 text-ink hover:bg-[#3ec8f0]">
-          Fale conosco
-        </a>
+      </nav>
+
+      {/* Mobile overlay */}
+      <div
+        className={"md:hidden fixed inset-0 z-30 transition-all duration-300 " +
+          (menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none")}
+        onClick={() => setMenuOpen(false)}
+        aria-hidden={!menuOpen}
+      >
+        <div className="absolute inset-0 bg-ink/95 backdrop-blur-xl" />
+        <div className="relative h-full flex flex-col justify-center px-8">
+          <div className="flex flex-col gap-1">
+            {links.map(([href, label], i) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className="text-white text-[32px] font-light tracking-[-0.02em] py-3 border-b border-white/10 hover:text-brand-500 transition-colors"
+                style={{ transitionDelay: menuOpen ? `${i * 40}ms` : '0ms' }}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+          <div className="mt-10 text-[11px] uppercase tracking-[0.3em] text-mute">
+            contato@groundflow.com.br
+          </div>
+        </div>
       </div>
-    </nav>
+    </>
   );
 }
 
@@ -642,7 +714,7 @@ function Casos() {
         </div>
 
         <div className="mt-8 grid md:grid-cols-12 gap-5">
-          <div className="md:col-span-7 rounded-3xl bg-ink-2 border border-white/10 p-8 md:p-12 min-h-[420px] relative overflow-hidden">
+          <div className="md:col-span-7 rounded-3xl bg-ink-2 border border-white/10 p-8 md:p-12 md:min-h-[420px] relative overflow-hidden">
             <div className="absolute inset-0 pointer-events-none opacity-20" style={{
               background: `radial-gradient(500px 300px at 20% 80%, ${current.color}66, transparent 60%)`
             }}/>
