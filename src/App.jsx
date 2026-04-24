@@ -654,14 +654,27 @@ function Hero() {
             </p>
           </div>
           <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={openContactModal}
-              className="btn-primary inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-brand-500 text-ink font-medium text-[14px] hover:bg-[#3ec8f0] transition-colors">
-              Fale conosco
-              <IconArrowRight width="16" height="16" strokeWidth="2" />
-            </button>
-            <a href="#solucao" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/15 text-white/90 hover:bg-white/5 transition-colors text-[14px]">
+            <a
+              href="#solucao"
+              onClick={(e) => {
+                e.preventDefault();
+                const target = document.getElementById('solucao');
+                if (!target) return;
+                const startY = window.scrollY;
+                const targetY = target.getBoundingClientRect().top + startY;
+                const distance = targetY - startY;
+                const duration = 1200;
+                const startTime = performance.now();
+                const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                const animate = (now) => {
+                  const elapsed = now - startTime;
+                  const progress = Math.min(elapsed / duration, 1);
+                  window.scrollTo(0, startY + distance * easeInOutCubic(progress));
+                  if (progress < 1) requestAnimationFrame(animate);
+                };
+                requestAnimationFrame(animate);
+              }}
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/15 text-white/90 hover:bg-white/5 transition-colors text-[14px]">
               Ver solução
             </a>
           </div>
