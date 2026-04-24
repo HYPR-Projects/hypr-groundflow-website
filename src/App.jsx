@@ -686,7 +686,7 @@ function Hero() {
             <HeroStat label="GMV mapeado" value="R$1.91T" />
             <HeroStat label="NF-e analisadas" value="+287M" />
             <HeroStat label="Cobertura do PIB do varejo" value="83.7%" />
-            <HeroStat label="Lojas mapeadas" value="100.3K" />
+            <HeroStat label="Mercado CPG no Brasil" value="R$280bn" />
           </div>
         </div>
       </div>
