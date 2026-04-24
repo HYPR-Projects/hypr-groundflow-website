@@ -672,7 +672,7 @@ function Hero() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             <HeroStat label="GMV mapeado" value="R$1.91T" />
             <HeroStat label="NF-e analisadas" value="+287M" />
-            <HeroStat label="% do PIB coberto" value="83.7%" />
+            <HeroStat label="% do PIB do varejo" value="83.7%" />
             <HeroStat label="Lojas mapeadas" value="100.3K" />
           </div>
         </div>
