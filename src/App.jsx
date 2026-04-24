@@ -724,17 +724,20 @@ function HeroStat({ label, value }) {
         if (entry.isIntersecting && !hasAnimated.current) {
           hasAnimated.current = true;
           const duration = 2500;
-          const startTime = performance.now();
+          const delay = 500;
           const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 
-          const animate = (now) => {
-            const elapsed = now - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const current = targetNum * easeOutCubic(progress);
-            setDisplayValue(`${prefix}${current.toFixed(decimals)}${suffix}`);
-            if (progress < 1) requestAnimationFrame(animate);
-          };
-          requestAnimationFrame(animate);
+          setTimeout(() => {
+            const startTime = performance.now();
+            const animate = (now) => {
+              const elapsed = now - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              const current = targetNum * easeOutCubic(progress);
+              setDisplayValue(`${prefix}${current.toFixed(decimals)}${suffix}`);
+              if (progress < 1) requestAnimationFrame(animate);
+            };
+            requestAnimationFrame(animate);
+          }, delay);
           observer.disconnect();
         }
       });
