@@ -705,9 +705,19 @@ function Casos() {
 
 function RankingRow({ position, name, score, role, note, color }) {
   const width = Math.max(6, Math.min(100, score));
-  const barColor = role === 'hero' ? color : role === 'anchor' ? '#4a5266' : '#2f3445';
-  const labelColor = role === 'hero' ? 'text-white' : 'text-white/80';
-  const posColor = role === 'hero' ? 'text-white' : 'text-mute/60';
+  const hexToRgba = (hex, alpha) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r},${g},${b},${alpha})`;
+  };
+  const barColor = role === 'hero'
+    ? color
+    : role === 'mid'
+      ? hexToRgba(color, 0.55)
+      : hexToRgba(color, 0.3);
+  const labelColor = role === 'hero' ? 'text-white' : 'text-white/85';
+  const posColor = role === 'hero' ? 'text-white' : 'text-white/50';
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3 mb-2">
@@ -717,12 +727,12 @@ function RankingRow({ position, name, score, role, note, color }) {
           </span>
           <span className={"text-[14px] truncate " + labelColor}>{name}</span>
           {note && (
-            <span className="text-[10px] font-mono tracking-[0.15em] text-mute/70 uppercase whitespace-nowrap hidden lg:inline">
+            <span className="text-[10px] font-mono tracking-[0.15em] text-white/40 uppercase whitespace-nowrap hidden lg:inline">
               · {note}
             </span>
           )}
         </div>
-        <span className="num text-[13px] text-mute tabular-nums">{score}</span>
+        <span className="num text-[13px] text-white/70 tabular-nums">{score}</span>
       </div>
       <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
         <div className="h-full rounded-full transition-all" style={{ width: width + '%', background: barColor }} />
