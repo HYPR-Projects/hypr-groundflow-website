@@ -172,14 +172,22 @@ function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 12);
-      // Logo reaparece no header quando o usuário sai da primeira dobra (~70% do viewport)
-      setShowLogo(window.scrollY > window.innerHeight * 0.7);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Header logo aparece exatamente quando a logo grande do hero sai do viewport
+  useEffect(() => {
+    const heroLogo = document.getElementById('hero-logo');
+    if (!heroLogo) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setShowLogo(!entry.isIntersecting),
+      { threshold: 0, rootMargin: '-40px 0px 0px 0px' }
+    );
+    io.observe(heroLogo);
+    return () => io.disconnect();
   }, []);
 
   useEffect(() => {
@@ -293,6 +301,7 @@ function Hero() {
         {/* Logo grande em vez de texto */}
         <div className="reveal delay-1">
           <img
+            id="hero-logo"
             src="/logo-groundflow-white.svg"
             alt="Groundflow"
             className="w-full max-w-[1100px] h-auto"
