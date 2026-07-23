@@ -12,6 +12,195 @@ const track = (event, params = {}) => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
+// I18N — conteúdo bilíngue (PT padrão + EN)
+// ═══════════════════════════════════════════════════════════════════════════
+const I18N = {
+  pt: {
+    nav: { problema: 'Problema', solucao: 'Solução', como: 'Como funciona', casos: 'Casos', estrategias: 'Estratégias', contato: 'Fale conosco' },
+    hero: {
+      eyebrow: 'The measurement layer for real sales',
+      tagline1: 'Real transactions.', tagline2: 'Smarter media.',
+      desc: 'Cada nota fiscal vai além do registro de venda. É o retrato de quem compra, o quê, onde e quando. Transformamos dados transacionais de milhares de PDVs em inteligência de mídia mensurável em vendas reais.',
+      cta: 'Ver solução',
+      stats: { gmv: 'GMV mapeado', nfe: 'NF-e analisadas', pib: 'Cobertura do PIB do varejo', cpg: 'Mercado CPG no Brasil' },
+    },
+    ticker: 'Medindo vendas reais em categorias como',
+    problema: {
+      label: '01 / O PROBLEMA', h2a: 'Medir o impacto da mídia no varejo físico sempre foi', h2b: ' um ponto cego.',
+      vendasLabel: 'Das vendas CPG no Brasil', fisico: 'ainda ocorrem em lojas físicas, não no e-commerce.',
+      fisicoBar: 'FÍSICO · 86,4%', ecomBar: 'E-COMMERCE · 13,6%',
+      mercadoLabel: 'Mercado CPG Brasil', digitais: 'são vendas digitais mensuráveis',
+      prose: 'Para anunciantes de CPG, entender o impacto real da mídia nos canais de venda físicos sempre foi uma incógnita. Até agora.',
+    },
+    solucao: {
+      label: '02 / A SOLUÇÃO', h2a: 'Performance de mídia agora tem', h2b: 'prova de venda.',
+      prose: 'Cruzamos mídia veiculada com dados transacionais no nível de SKU, storechain e PDV. Metodologia aberta, com grupos exposto e controle, agnóstica ao varejista.',
+      card1Title: 'Mídia veiculada', card1Campaign: 'ATIVAÇÃO · Q2',
+      card2Title: 'Venda real no PDV', card2Cat: 'BEBIDAS',
+      resultTitle: 'Lift de vendas · SKU', resultBig: 'até +19%', resultSub1: 'mensurado em até', resultSub2: '14 dias',
+    },
+    como: {
+      label: '03 / COMO FUNCIONA', h2a: 'Três etapas. ', h2b: 'Uma arquitetura', h2c: ' agnóstica ao varejista.',
+      note: 'Dados de primeira parte, com consentimento e rastreáveis, do primeiro contato de mídia até a nota fiscal.',
+      steps: [
+        { title: 'Aquisição de dados', desc: 'Integramos dados transacionais de milhares de PDVs no nível de SKU, ticket, storechain e categoria. Base agnóstica ao varejista, cobertura continental.', tags: ['SKU', 'STORECHAIN', 'TICKET', 'CATEGORY'] },
+        { title: 'Modelagem + ativação', desc: 'Identificamos PDVs com maior potencial de lift de vendas. Definimos grupos exposto e controle. Ativamos mídia direcionada aos dispositivos certos.', tags: ['EXPOSTO', 'CONTROLE', 'O2O', 'AUDIÊNCIA'] },
+        { title: 'Lift de vendas', desc: 'Comparamos desempenho entre exposto e controle. Medimos lift no SKU e na categoria. Resultado em vendas reais, mensurado em até 14 dias.', tags: ['LIFT SKU', 'LIFT CATEGORIA', 'GMV', '14 DIAS'] },
+      ],
+    },
+    casos: {
+      label: '04 / CASOS DE USO', h2a: 'O que os dados revelam quando você tem ', h2b: '+550K notas fiscais', h2c: '.',
+      meta1: 'AMOSTRA · MCDONALD’S · SWIFT · DROGA RAIA', meta2: 'MÉTODO · GROUNDFLOW SELLOUT DATA',
+      generates: 'gera', than: 'que', topLabel: 'TOP SKUs POR RECEITA', indexLabel: 'ÍNDICE · 100 = LÍDER',
+      sampleLabel: 'Amostra analisada', sampleSub: 'notas fiscais cross-retailer',
+      items: [
+        { article: 'No', label: 'mais receita', tag: 'Fast food', vs: 'Big Mac', insight: 'A bebida complementar gera mais valor do que o item-âncora do menu.',
+          ranking: [{ name: 'Coca-Cola', note: 'Complementar' }, { name: 'Batata frita grande', note: null }, { name: 'Big Mac', note: 'Item-âncora' }] },
+        { article: 'Na', label: 'mais GMV', tag: 'Açougue premium', vs: 'Filet mignon', insight: 'O corte favorito do brasileiro supera alternativas mais caras em GMV total.',
+          ranking: [{ name: 'Picanha', note: 'Preferência local' }, { name: 'Alcatra', note: null }, { name: 'Filet mignon', note: 'Corte premium' }] },
+        { article: 'Na', label: 'mais GMV', tag: 'Farmácia', vs: 'Novalgina', insight: 'Medicamentos de prescrição crescente redesenham a receita da categoria.',
+          ranking: [{ name: 'Ozempic', note: 'Prescrição crescente' }, { name: 'Losartana', note: null }, { name: 'Novalgina', note: 'Alta rotação' }] },
+      ],
+    },
+    estrategias: {
+      label: '05 / ESTRATÉGIAS', h2a: 'Uma arquitetura que impacta em ', h2b: 'receita incremental.',
+      note: 'Quatro abordagens para construir audiências que geram impacto mensurável no PDV.',
+      kicker: 'ESTRATÉGIA', focus: 'FOCO',
+      items: [
+        { title: 'Conquistar market share', desc: 'Audiência focada em locais onde sua marca perde market share. Foco: receita via novos compradores.' },
+        { title: 'Fidelizar recorrentes', desc: 'Audiência próxima a PDVs onde sua marca já lidera. Foco: aumentar consumo de clientes recorrentes.' },
+        { title: 'Cross-sell em SKUs', desc: 'Audiência a partir de places com maior correlação entre produtos. Foco: vendas cruzadas.' },
+        { title: 'Trade em PDVs', desc: 'Audiência baseada em ativações de trade. Foco: canais com parcerias estratégicas.' },
+      ],
+    },
+    cta: {
+      eyebrow: 'Pronto para começar?', h2a: 'O próximo grande passo', h2b: 'da sua marca.',
+      prose: 'Meça o impacto real da mídia no ponto de venda. Transforme cada transação em decisão de investimento.',
+      demo: 'Agende uma demo', especialista: 'Fale com um especialista',
+    },
+    footer: {
+      tagline: 'A camada de medição de vendas reais para a indústria de bens de consumo.',
+      product: 'Produto', pSolucao: 'Solução', pComo: 'Como funciona', pCasos: 'Casos de uso',
+      company: 'Empresa', about: 'Sobre', blog: 'Blog', careers: 'Carreiras',
+      contact: 'Contato', place: 'São Paulo · Brasil', rights: '© 2026 Groundflow · Todos os direitos reservados',
+    },
+    modal: {
+      title: 'Fale com um especialista', sub: 'Preencha o formulário e entraremos em contato em breve.',
+      nome: 'Nome', nomePh: 'Seu nome completo', email: 'Email corporativo', emailPh: 'voce@empresa.com',
+      tel: 'Telefone', empresa: 'Empresa', empresaPh: 'Nome da empresa', invest: 'Investimento previsto', investPh: 'Selecione uma faixa',
+      submit: 'Enviar', sending: 'Enviando...', successT: 'Tudo certo!', successD1: 'Recebemos seus dados.', successD2: 'Em breve entraremos em contato.',
+      consent: 'Ao enviar, você concorda em ser contatado sobre os serviços do Groundflow.',
+      err: 'Não foi possível enviar. Tente novamente ou escreva para contato@groundflow.com.br',
+      eNome: 'Informe seu nome', eNome2: 'Nome muito curto', eEmail: 'Informe seu email', eEmail2: 'Email inválido',
+      eTel: 'Informe seu telefone', eTel2: 'Telefone incompleto', eEmpresa: 'Informe sua empresa', eInvest: 'Selecione uma opção',
+      opts: [['50k-100k', 'R$ 50k – R$ 100k'], ['100k-250k', 'R$ 100k – R$ 250k'], ['250k-500k', 'R$ 250k – R$ 500k'], ['500k-1M', 'R$ 500k – R$ 1M'], ['acima-1M', 'Acima de R$ 1M'], ['indefinido', 'Indefinido']],
+    },
+  },
+  en: {
+    nav: { problema: 'Problem', solucao: 'Solution', como: 'How it works', casos: 'Use cases', estrategias: 'Strategies', contato: 'Contact us' },
+    hero: {
+      eyebrow: 'The measurement layer for real sales',
+      tagline1: 'Real transactions.', tagline2: 'Smarter media.',
+      desc: "Every receipt is more than a sales record. It's a portrait of who buys, what, where and when. We turn transactional data from thousands of points of sale into media intelligence measurable in real sales.",
+      cta: 'See the solution',
+      stats: { gmv: 'GMV mapped', nfe: 'Invoices analyzed', pib: 'Retail GDP coverage', cpg: 'CPG market in Brazil' },
+    },
+    ticker: 'Measuring real sales across categories like',
+    problema: {
+      label: '01 / THE PROBLEM', h2a: 'Measuring media impact in physical retail has always been', h2b: ' a blind spot.',
+      vendasLabel: 'Of CPG sales in Brazil', fisico: 'still happen in physical stores, not e-commerce.',
+      fisicoBar: 'PHYSICAL · 86.4%', ecomBar: 'E-COMMERCE · 13.6%',
+      mercadoLabel: 'CPG market Brazil', digitais: 'are measurable digital sales',
+      prose: 'For CPG advertisers, understanding the real impact of media on physical sales channels has always been an unknown. Until now.',
+    },
+    solucao: {
+      label: '02 / THE SOLUTION', h2a: 'Media performance now has', h2b: 'proof of sale.',
+      prose: 'We cross media delivery with transactional data at the SKU, store-chain and point-of-sale level. An open methodology, with exposed and control groups, retailer-agnostic.',
+      card1Title: 'Media delivered', card1Campaign: 'ACTIVATION · Q2',
+      card2Title: 'Real sale at the POS', card2Cat: 'BEVERAGES',
+      resultTitle: 'Sales lift · SKU', resultBig: 'up to +19%', resultSub1: 'measured in up to', resultSub2: '14 days',
+    },
+    como: {
+      label: '03 / HOW IT WORKS', h2a: 'Three steps. ', h2b: 'One architecture', h2c: " that's retailer-agnostic.",
+      note: 'First-party, consent-based and traceable data, from the first media touch to the receipt.',
+      steps: [
+        { title: 'Data acquisition', desc: 'We integrate transactional data from thousands of points of sale at the SKU, ticket, store-chain and category level. A retailer-agnostic base with continental coverage.', tags: ['SKU', 'STORECHAIN', 'TICKET', 'CATEGORY'] },
+        { title: 'Modeling + activation', desc: 'We identify the points of sale with the highest sales-lift potential. We define exposed and control groups. We activate media targeted to the right devices.', tags: ['EXPOSED', 'CONTROL', 'O2O', 'AUDIENCE'] },
+        { title: 'Sales lift', desc: 'We compare performance between exposed and control. We measure lift at the SKU and category level. Results in real sales, measured in up to 14 days.', tags: ['SKU LIFT', 'CATEGORY LIFT', 'GMV', '14 DAYS'] },
+      ],
+    },
+    casos: {
+      label: '04 / USE CASES', h2a: 'What the data reveals when you have ', h2b: '+550K receipts', h2c: '.',
+      meta1: 'SAMPLE · MCDONALD’S · SWIFT · DROGA RAIA', meta2: 'METHOD · GROUNDFLOW SELLOUT DATA',
+      generates: 'generates', than: 'than', topLabel: 'TOP SKUs BY REVENUE', indexLabel: 'INDEX · 100 = LEADER',
+      sampleLabel: 'Sample analyzed', sampleSub: 'cross-retailer receipts',
+      items: [
+        { article: 'At', label: 'more revenue', tag: 'Fast food', vs: 'the Big Mac', insight: "The complementary drink generates more value than the menu's anchor item.",
+          ranking: [{ name: 'Coca-Cola', note: 'Complementary' }, { name: 'Large fries', note: null }, { name: 'Big Mac', note: 'Anchor item' }] },
+        { article: 'At', label: 'more GMV', tag: 'Premium butcher', vs: 'filet mignon', insight: "Brazilians' favorite cut outperforms pricier alternatives in total GMV.",
+          ranking: [{ name: 'Picanha', note: 'Local favorite' }, { name: 'Top sirloin', note: null }, { name: 'Filet mignon', note: 'Premium cut' }] },
+        { article: 'At', label: 'more GMV', tag: 'Pharmacy', vs: 'Novalgina', insight: "Fast-growing prescription drugs are reshaping the category's revenue.",
+          ranking: [{ name: 'Ozempic', note: 'Growing prescription' }, { name: 'Losartan', note: null }, { name: 'Novalgina', note: 'High turnover' }] },
+      ],
+    },
+    estrategias: {
+      label: '05 / STRATEGIES', h2a: 'An architecture that drives ', h2b: 'incremental revenue.',
+      note: 'Four approaches to build audiences that drive measurable impact at the point of sale.',
+      kicker: 'STRATEGY', focus: 'FOCUS',
+      items: [
+        { title: 'Win market share', desc: 'Audiences focused on locations where your brand is losing market share. Focus: revenue from new buyers.' },
+        { title: 'Retain repeat buyers', desc: 'Audiences near points of sale where your brand already leads. Focus: growing consumption from repeat customers.' },
+        { title: 'Cross-sell across SKUs', desc: 'Audiences from places with the highest product correlation. Focus: cross-selling.' },
+        { title: 'Trade at points of sale', desc: 'Audiences based on trade activations. Focus: channels with strategic partnerships.' },
+      ],
+    },
+    cta: {
+      eyebrow: 'Ready to get started?', h2a: 'The next big step', h2b: 'for your brand.',
+      prose: 'Measure the real impact of media at the point of sale. Turn every transaction into an investment decision.',
+      demo: 'Book a demo', especialista: 'Talk to a specialist',
+    },
+    footer: {
+      tagline: 'The real-sales measurement layer for the consumer goods industry.',
+      product: 'Product', pSolucao: 'Solution', pComo: 'How it works', pCasos: 'Use cases',
+      company: 'Company', about: 'About', blog: 'Blog', careers: 'Careers',
+      contact: 'Contact', place: 'São Paulo · Brazil', rights: '© 2026 Groundflow · All rights reserved',
+    },
+    modal: {
+      title: 'Talk to a specialist', sub: "Fill in the form and we'll get in touch shortly.",
+      nome: 'Name', nomePh: 'Your full name', email: 'Work email', emailPh: 'you@company.com',
+      tel: 'Phone', empresa: 'Company', empresaPh: 'Company name', invest: 'Planned investment', investPh: 'Select a range',
+      submit: 'Send', sending: 'Sending...', successT: 'All set!', successD1: 'We received your details.', successD2: "We'll be in touch soon.",
+      consent: 'By submitting, you agree to be contacted about Groundflow services.',
+      err: 'Could not send. Try again or write to contato@groundflow.com.br',
+      eNome: 'Enter your name', eNome2: 'Name too short', eEmail: 'Enter your email', eEmail2: 'Invalid email',
+      eTel: 'Enter your phone', eTel2: 'Phone incomplete', eEmpresa: 'Enter your company', eInvest: 'Select an option',
+      opts: [['50k-100k', 'R$ 50k – R$ 100k'], ['100k-250k', 'R$ 100k – R$ 250k'], ['250k-500k', 'R$ 250k – R$ 500k'], ['500k-1M', 'R$ 500k – R$ 1M'], ['acima-1M', 'Above R$ 1M'], ['indefinido', 'Undecided']],
+    },
+  },
+};
+
+const LangCtx = createContext({ lang: 'pt', setLang: () => {}, t: I18N.pt });
+const useLang = () => useContext(LangCtx);
+
+function LangProvider({ children }) {
+  const [lang, setLangState] = useState('pt');
+  useEffect(() => {
+    let saved = null;
+    try { saved = localStorage.getItem('gf_lang'); } catch (_) {}
+    if (saved === 'en' || saved === 'pt') setLangState(saved);
+  }, []);
+  const setLang = useCallback((l) => {
+    setLangState(l);
+    try { localStorage.setItem('gf_lang', l); } catch (_) {}
+    if (typeof document !== 'undefined') document.documentElement.lang = l === 'en' ? 'en' : 'pt-BR';
+    track('lang_switch', { lang: l });
+  }, []);
+  useEffect(() => { if (typeof document !== 'undefined') document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR'; }, [lang]);
+  const value = useMemo(() => ({ lang, setLang, t: I18N[lang] }), [lang, setLang]);
+  return <LangCtx.Provider value={value}>{children}</LangCtx.Provider>;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // ICONS
 // ═══════════════════════════════════════════════════════════════════════════
 const iconBase = { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.5, strokeLinecap: 'round', strokeLinejoin: 'round' };
@@ -140,17 +329,17 @@ const formatPhone = (value) => {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-const validateForm = (data) => {
+const validateForm = (data, m) => {
   const e = {};
-  if (!data.nome.trim()) e.nome = 'Informe seu nome';
-  else if (data.nome.trim().length < 2) e.nome = 'Nome muito curto';
-  if (!data.email.trim()) e.email = 'Informe seu email';
-  else if (!EMAIL_RE.test(data.email.trim())) e.email = 'Email inválido';
+  if (!data.nome.trim()) e.nome = m.eNome;
+  else if (data.nome.trim().length < 2) e.nome = m.eNome2;
+  if (!data.email.trim()) e.email = m.eEmail;
+  else if (!EMAIL_RE.test(data.email.trim())) e.email = m.eEmail2;
   const digits = data.telefone.replace(/\D/g, '');
-  if (!digits) e.telefone = 'Informe seu telefone';
-  else if (digits.length < 10) e.telefone = 'Telefone incompleto';
-  if (!data.empresa.trim()) e.empresa = 'Informe sua empresa';
-  if (!data.investimento) e.investimento = 'Selecione uma opção';
+  if (!digits) e.telefone = m.eTel;
+  else if (digits.length < 10) e.telefone = m.eTel2;
+  if (!data.empresa.trim()) e.empresa = m.eEmpresa;
+  if (!data.investimento) e.investimento = m.eInvest;
   return e;
 };
 
@@ -184,7 +373,7 @@ function Field({ label, error, children, htmlFor }) {
   );
 }
 
-function SuccessState() {
+function SuccessState({ m }) {
   return (
     <div className="p-9 md:p-11 text-center">
       <svg viewBox="0 0 52 52" className="w-20 h-20 mx-auto mb-5" aria-hidden="true">
@@ -203,15 +392,16 @@ function SuccessState() {
             strokeLinecap="round" strokeLinejoin="round" strokeDasharray="40" strokeDashoffset="40" />
         </g>
       </svg>
-      <h3 className="text-white text-[22px] font-semibold">Tudo certo!</h3>
+      <h3 className="text-white text-[22px] font-semibold">{m.successT}</h3>
       <p className="text-mute text-[14px] mt-2 leading-relaxed">
-        Recebemos seus dados.<br />Em breve entraremos em contato.
+        {m.successD1}<br />{m.successD2}
       </p>
     </div>
   );
 }
 
 function ContactModal({ isOpen, onClose, onSuccess }) {
+  const m = useLang().t.modal;
   const initial = { nome: '', email: '', telefone: '', empresa: '', investimento: '' };
   const [form, setForm] = useState(initial);
   const [errors, setErrors] = useState({});
@@ -269,14 +459,14 @@ function ContactModal({ isOpen, onClose, onSuccess }) {
     }
     setForm((prev) => {
       const next = { ...prev, [field]: value };
-      if (touched[field]) setErrors(validateForm(next));
+      if (touched[field]) setErrors(validateForm(next, m));
       return next;
     });
   };
 
   const handleBlur = (field) => {
     setTouched((p) => ({ ...p, [field]: true }));
-    const v = validateForm(form);
+    const v = validateForm(form, m);
     setErrors(v);
     if (v[field] && !trackedValidationErrorsRef.current.has(field)) {
       trackedValidationErrorsRef.current.add(field);
@@ -288,7 +478,7 @@ function ContactModal({ isOpen, onClose, onSuccess }) {
     e.preventDefault();
     const allTouched = Object.keys(initial).reduce((a, k) => ({ ...a, [k]: true }), {});
     setTouched(allTouched);
-    const v = validateForm(form);
+    const v = validateForm(form, m);
     setErrors(v);
     track('contact_form_submit_attempt', { has_errors: Object.keys(v).length > 0, error_count: Object.keys(v).length });
     if (Object.keys(v).length > 0) return;
@@ -332,13 +522,13 @@ function ContactModal({ isOpen, onClose, onSuccess }) {
         {status !== 'success' ? (
           <form onSubmit={handleSubmit} className="p-7 md:p-9" noValidate>
             <h3 id="contact-modal-title" className="text-white text-[22px] md:text-[24px] font-semibold leading-tight pr-6">
-              Fale com um especialista
+              {m.title}
             </h3>
             <p className="text-mute text-[13px] mt-2 mb-6">
-              Preencha o formulário e entraremos em contato em breve.
+              {m.sub}
             </p>
 
-            <Field label="Nome" error={touched.nome && errors.nome} htmlFor="cm-nome">
+            <Field label={m.nome} error={touched.nome && errors.nome} htmlFor="cm-nome">
               <input
                 id="cm-nome"
                 ref={firstInputRef}
@@ -347,13 +537,13 @@ function ContactModal({ isOpen, onClose, onSuccess }) {
                 onChange={(e) => updateField('nome', e.target.value)}
                 onBlur={() => handleBlur('nome')}
                 className={inputCls(touched.nome && errors.nome)}
-                placeholder="Seu nome completo"
+                placeholder={m.nomePh}
                 autoComplete="name"
                 required
               />
             </Field>
 
-            <Field label="Email corporativo" error={touched.email && errors.email} htmlFor="cm-email">
+            <Field label={m.email} error={touched.email && errors.email} htmlFor="cm-email">
               <input
                 id="cm-email"
                 type="email"
@@ -361,14 +551,14 @@ function ContactModal({ isOpen, onClose, onSuccess }) {
                 onChange={(e) => updateField('email', e.target.value)}
                 onBlur={() => handleBlur('email')}
                 className={inputCls(touched.email && errors.email)}
-                placeholder="voce@empresa.com"
+                placeholder={m.emailPh}
                 autoComplete="email"
                 inputMode="email"
                 required
               />
             </Field>
 
-            <Field label="Telefone" error={touched.telefone && errors.telefone} htmlFor="cm-telefone">
+            <Field label={m.tel} error={touched.telefone && errors.telefone} htmlFor="cm-telefone">
               <input
                 id="cm-telefone"
                 type="tel"
@@ -384,7 +574,7 @@ function ContactModal({ isOpen, onClose, onSuccess }) {
               />
             </Field>
 
-            <Field label="Empresa" error={touched.empresa && errors.empresa} htmlFor="cm-empresa">
+            <Field label={m.empresa} error={touched.empresa && errors.empresa} htmlFor="cm-empresa">
               <input
                 id="cm-empresa"
                 type="text"
@@ -392,13 +582,13 @@ function ContactModal({ isOpen, onClose, onSuccess }) {
                 onChange={(e) => updateField('empresa', e.target.value)}
                 onBlur={() => handleBlur('empresa')}
                 className={inputCls(touched.empresa && errors.empresa)}
-                placeholder="Nome da empresa"
+                placeholder={m.empresaPh}
                 autoComplete="organization"
                 required
               />
             </Field>
 
-            <Field label="Investimento previsto" error={touched.investimento && errors.investimento} htmlFor="cm-invest">
+            <Field label={m.invest} error={touched.investimento && errors.investimento} htmlFor="cm-invest">
               <select
                 id="cm-invest"
                 value={form.investimento}
@@ -413,19 +603,16 @@ function ContactModal({ isOpen, onClose, onSuccess }) {
                 }}
                 required
               >
-                <option value="" disabled>Selecione uma faixa</option>
-                <option value="50k-100k">R$ 50k – R$ 100k</option>
-                <option value="100k-250k">R$ 100k – R$ 250k</option>
-                <option value="250k-500k">R$ 250k – R$ 500k</option>
-                <option value="500k-1M">R$ 500k – R$ 1M</option>
-                <option value="acima-1M">Acima de R$ 1M</option>
-                <option value="indefinido">Indefinido</option>
+                <option value="" disabled>{m.investPh}</option>
+                {m.opts.map(([val, lbl]) => (
+                  <option key={val} value={val}>{lbl}</option>
+                ))}
               </select>
             </Field>
 
             {status === 'error' && (
               <div className="text-red-400 text-[13px] mb-4 bg-red-400/5 border border-red-400/20 rounded-lg px-3 py-2">
-                Não foi possível enviar. Tente novamente ou escreva para contato@groundflow.com.br
+                {m.err}
               </div>
             )}
 
@@ -440,19 +627,19 @@ function ContactModal({ isOpen, onClose, onSuccess }) {
                     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeOpacity="0.25" />
                     <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                   </svg>
-                  Enviando...
+                  {m.sending}
                 </>
               ) : (
-                <>Enviar <IconArrowRight width="16" height="16" strokeWidth="2" /></>
+                <>{m.submit} <IconArrowRight width="16" height="16" strokeWidth="2" /></>
               )}
             </button>
 
             <p className="text-white/40 text-[11px] text-center mt-4 leading-relaxed">
-              Ao enviar, você concorda em ser contatado sobre os serviços do Groundflow.
+              {m.consent}
             </p>
           </form>
         ) : (
-          <SuccessState />
+          <SuccessState m={m} />
         )}
       </div>
     </div>
@@ -547,6 +734,7 @@ function Nav() {
   const [showLogo, setShowLogo] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { open: openContactModal } = useContactModal();
+  const { lang, setLang, t } = useLang();
 
   useEffect(() => {
     let raf = null;
@@ -597,13 +785,19 @@ function Nav() {
   }, [menuOpen]);
 
   const links = [
-    ['#problema', 'Problema'],
-    ['#solucao', 'Solução'],
-    ['#como-funciona', 'Como funciona'],
-    ['#casos', 'Casos'],
-    ['#estrategias', 'Estratégias'],
+    ['#problema', t.nav.problema],
+    ['#solucao', t.nav.solucao],
+    ['#como-funciona', t.nav.como],
+    ['#casos', t.nav.casos],
+    ['#estrategias', t.nav.estrategias],
   ];
   const MARKET_MAP_URL = 'https://map.groundflow.one';
+  const LangToggle = ({ className = '' }) => (
+    <div className={"flex items-center rounded-full border border-white/15 p-0.5 text-[11px] font-medium tracking-[0.08em] " + className} role="group" aria-label="Language">
+      <button type="button" onClick={() => setLang('en')} className={"px-3 py-1.5 rounded-full transition-colors " + (lang === 'en' ? 'bg-white/10 text-white' : 'text-white/50 hover:text-white')}>EN</button>
+      <button type="button" onClick={() => setLang('pt')} className={"px-3 py-1.5 rounded-full transition-colors " + (lang === 'pt' ? 'bg-white/10 text-white' : 'text-white/50 hover:text-white')}>PT-BR</button>
+    </div>
+  );
 
   return (
     <>
@@ -638,13 +832,14 @@ function Nav() {
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M7 7h10v10" /></svg>
             </a>
           </div>
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="flex items-center gap-3 ml-auto">
+            <LangToggle className="hidden sm:flex" />
             <button
               type="button"
               onClick={() => { setMenuOpen(false); openContactModal('header'); }}
               className={"btn-primary text-[13px] font-medium px-4 py-2 rounded-full bg-brand-500 text-ink hover:bg-[#3ec8f0] transition-colors " +
               (menuOpen ? "hidden md:inline-flex" : "inline-flex")}>
-              Fale conosco
+              {t.nav.contato}
             </button>
             <button
               onClick={() => setMenuOpen(v => !v)}
@@ -692,7 +887,10 @@ function Nav() {
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M7 7h10v10" /></svg>
             </a>
           </div>
-          <div className="mt-10 text-[11px] uppercase tracking-[0.3em] text-mute">
+          <div className="mt-10 sm:hidden">
+            <LangToggle />
+          </div>
+          <div className="mt-6 text-[11px] uppercase tracking-[0.3em] text-mute">
             contato@groundflow.com.br
           </div>
         </div>
@@ -705,6 +903,7 @@ function Nav() {
 function Hero() {
   const ref = useReveal();
   const { open: openContactModal } = useContactModal();
+  const { t } = useLang();
   return (
     <section id="top" ref={ref} className="relative grid-bg overflow-hidden pt-28 pb-24 md:pt-40 md:pb-36">
       <div className="absolute -top-40 -left-40 w-[620px] h-[620px] glow-blue opacity-60 pointer-events-none" />
@@ -720,7 +919,7 @@ function Hero() {
       <div className="relative max-w-7xl mx-auto px-5 md:px-8">
         <div className="reveal flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-brand-500 mb-8">
           <span className="w-6 h-px bg-brand-500" />
-          The measurement layer for real sales
+          {t.hero.eyebrow}
         </div>
 
         {/* Logo grande em vez de texto */}
@@ -737,13 +936,10 @@ function Hero() {
         <div className="reveal delay-2 mt-10 md:mt-14 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
           <div>
             <p className="text-white/80 text-[22px] md:text-[28px] font-light leading-tight max-w-xl">
-              Real transactions. <span className="font-semibold text-white">Smarter media.</span>
+              {t.hero.tagline1} <span className="font-semibold text-white">{t.hero.tagline2}</span>
             </p>
             <p className="mt-4 text-mute max-w-lg text-[15px] leading-relaxed">
-              Cada nota fiscal vai além do registro de venda. É o retrato
-              de quem compra, o quê, onde e quando. Transformamos dados
-              transacionais de milhares de PDVs em inteligência de mídia
-              mensurável em vendas reais.
+              {t.hero.desc}
             </p>
           </div>
           <div className="flex gap-3">
@@ -769,7 +965,7 @@ function Hero() {
                 requestAnimationFrame(animate);
               }}
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/15 text-white/90 hover:bg-white/5 transition-colors text-[14px]">
-              Ver solução
+              {t.hero.cta}
             </a>
           </div>
         </div>
@@ -777,10 +973,10 @@ function Hero() {
         <div className="reveal delay-3 mt-20 md:mt-28 relative">
           <div className="dot-rule mb-6" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            <HeroStat label="GMV mapeado" value="R$1.91T" />
-            <HeroStat label="NF-e analisadas" value="+287M" />
-            <HeroStat label="Cobertura do PIB do varejo" value="83.7%" />
-            <HeroStat label="Mercado CPG no Brasil" value="R$1.5bn" />
+            <HeroStat label={t.hero.stats.gmv} value="R$1.91T" />
+            <HeroStat label={t.hero.stats.nfe} value="+287M" />
+            <HeroStat label={t.hero.stats.pib} value="83.7%" />
+            <HeroStat label={t.hero.stats.cpg} value="R$1.5bn" />
           </div>
         </div>
       </div>
@@ -897,12 +1093,13 @@ function AnimatedNumber({ value, decimals = 0, locale = 'pt-BR', duration = 2500
 
 // ---------- CONTEXT BAR ----------
 function ContextBar() {
+  const { t } = useLang();
   const items = ['McDonald\u2019s', 'Coca-Cola', 'Swift', 'Droga Raia', 'Heineken', 'Pão de Açúcar', 'Heinz', 'Mambo', 'Oxxo', 'Listerine', 'Novalgina', 'Hellmann\u2019s'];
   const all = [...items, ...items];
   return (
     <section className="bg-ink border-y border-white/5 py-8 overflow-hidden">
       <div className="text-[10px] uppercase tracking-[0.3em] text-mute text-center mb-6">
-        Medindo vendas reais em categorias como
+        {t.ticker}
       </div>
       <div className="relative">
         <div className="ticker-track flex gap-14 w-max text-white/60">
@@ -920,26 +1117,28 @@ function ContextBar() {
 // ---------- PROBLEMA ----------
 function Problema() {
   const ref = useReveal();
+  const { t, lang } = useLang();
+  const loc = lang === 'en' ? 'en-US' : 'pt-BR';
   return (
     <section id="problema" ref={ref} className="relative grid-bg-light py-28 md:py-36 text-ink overflow-hidden">
       <div className="max-w-7xl mx-auto px-5 md:px-8">
-        <SectionLabel dark label="01 / O PROBLEMA" />
+        <SectionLabel dark label={t.problema.label} />
         <h2 className="reveal delay-1 mt-6 text-[36px] md:text-[56px] font-light leading-[1.02] tracking-[-0.02em] max-w-4xl">
-          Medir o impacto da mídia no varejo físico sempre foi
-          <span className="font-semibold"> um ponto cego.</span>
+          {t.problema.h2a}
+          <span className="font-semibold">{t.problema.h2b}</span>
         </h2>
 
         <div className="mt-16 md:mt-24 grid md:grid-cols-12 gap-10 items-end">
           <div className="reveal delay-2 md:col-span-7 border-t border-ink/15 pt-6">
             <div className="flex items-start justify-between gap-6">
-              <div className="text-[11px] uppercase tracking-[0.2em] text-ink/60">Das vendas CPG no Brasil</div>
+              <div className="text-[11px] uppercase tracking-[0.2em] text-ink/60">{t.problema.vendasLabel}</div>
               <div className="text-[11px] text-ink/40 font-mono">FGV IBRE · ABComm</div>
             </div>
             <div className="num text-[120px] md:text-[160px] lg:text-[220px] xl:text-[260px] font-semibold leading-[0.82] tracking-[-0.05em] mt-6 text-ink">
-              <AnimatedNumber value={86.4} decimals={1} /><span className="text-brand-600">%</span>
+              <AnimatedNumber value={86.4} decimals={1} locale={loc} /><span className="text-brand-600">%</span>
             </div>
             <div className="mt-4 text-[18px] md:text-[22px] font-light max-w-md text-ink/80">
-              ainda ocorrem em lojas físicas, não no e-commerce.
+              {t.problema.fisico}
             </div>
 
             <div className="mt-10 max-w-xl">
@@ -950,23 +1149,23 @@ function Problema() {
                 <div className="h-full" style={{ width: '13.6%', background: '#24bdef' }} />
               </div>
               <div className="flex justify-between text-[11px] mt-2 text-ink/60 font-mono">
-                <span>FÍSICO · 86,4%</span>
-                <span>E-COMMERCE · 13,6%</span>
+                <span>{t.problema.fisicoBar}</span>
+                <span>{t.problema.ecomBar}</span>
               </div>
             </div>
           </div>
 
           <div className="reveal delay-3 md:col-span-5 md:border-l border-ink/15 md:pl-10 pt-10 border-t md:border-t-0 md:pt-0">
-            <div className="text-[11px] uppercase tracking-[0.2em] text-ink/60 mb-6">Mercado CPG Brasil</div>
+            <div className="text-[11px] uppercase tracking-[0.2em] text-ink/60 mb-6">{t.problema.mercadoLabel}</div>
             <div className="num text-[88px] md:text-[104px] lg:text-[128px] font-semibold leading-[0.85] tracking-[-0.04em] text-brand-600">
-              R$<AnimatedNumber value={280} decimals={0} /><span className="text-[56px] md:text-[64px] lg:text-[72px] align-top pl-1 font-light">bn</span>
+              R$<AnimatedNumber value={280} decimals={0} locale={loc} /><span className="text-[56px] md:text-[64px] lg:text-[72px] align-top pl-1 font-light">bn</span>
             </div>
             <div className="mt-4 flex items-baseline gap-3">
               <span className="num text-[40px] font-semibold text-ink">&lt;1%</span>
-              <span className="text-[14px] text-ink/70">são vendas digitais mensuráveis</span>
+              <span className="text-[14px] text-ink/70">{t.problema.digitais}</span>
             </div>
             <p className="mt-6 text-[15px] leading-relaxed text-ink/70 max-w-sm">
-              Para anunciantes de CPG, entender o impacto real da mídia nos canais de venda físicos sempre foi uma incógnita. Até agora.
+              {t.problema.prose}
             </p>
           </div>
         </div>
@@ -987,27 +1186,28 @@ function SectionLabel({ label, dark = false }) {
 // ---------- SOLUÇÃO ----------
 function Solucao() {
   const ref = useReveal();
+  const { t } = useLang();
   return (
     <section id="solucao" ref={ref} className="relative grid-bg py-28 md:py-36 overflow-hidden">
       <div className="absolute top-1/3 -right-20 w-[500px] h-[500px] glow-cyan pointer-events-none" />
       <div className="max-w-7xl mx-auto px-5 md:px-8">
-        <SectionLabel label="02 / A SOLUÇÃO" />
+        <SectionLabel label={t.solucao.label} />
         <h2 className="reveal delay-1 mt-6 text-[36px] md:text-[64px] font-light leading-[1.02] tracking-[-0.025em] max-w-5xl">
-          Performance de mídia agora tem
+          {t.solucao.h2a}
           <span className="relative inline-block ml-3">
-            <span className="font-semibold text-brand-500">prova de venda.</span>
+            <span className="font-semibold text-brand-500">{t.solucao.h2b}</span>
           </span>
         </h2>
         <p className="reveal delay-2 mt-6 text-mute text-[16px] md:text-[18px] max-w-2xl leading-relaxed">
-          Cruzamos mídia veiculada com dados transacionais no nível de SKU, storechain e PDV. Metodologia aberta, com grupos exposto e controle, agnóstica ao varejista.
+          {t.solucao.prose}
         </p>
 
         <div className="reveal delay-3 mt-16 grid md:grid-cols-[1fr_auto_1fr_auto_1fr] gap-6 items-stretch">
           <DataCard
             kicker="MEDIA DATA"
-            title="Mídia veiculada"
+            title={t.solucao.card1Title}
             fields={[
-              ['CAMPAIGN', 'ATIVAÇÃO · Q2'],
+              ['CAMPAIGN', t.solucao.card1Campaign],
               ['IMPRESSIONS', '2.8M'],
               ['STORECHAIN', '+180 PDVs'],
               ['REGION', 'SP · RS'],
@@ -1017,10 +1217,10 @@ function Solucao() {
           <Connector />
           <DataCard
             kicker="TRANSACTION DATA"
-            title="Venda real no PDV"
+            title={t.solucao.card2Title}
             fields={[
               ['SKU', '7891024131602'],
-              ['CATEGORY', 'BEBIDAS'],
+              ['CATEGORY', t.solucao.card2Cat],
               ['PRICE', 'R$ 12,90'],
               ['REVENUE', 'R$ 129,50'],
             ]}
@@ -1078,6 +1278,7 @@ function Connector({ type = 'cross' }) {
 }
 
 function ResultCard() {
+  const { t } = useLang();
   return (
     <div className="relative rounded-2xl bg-gradient-to-br from-brand-600 to-brand-500 text-ink p-6 overflow-hidden">
       <div className="absolute -right-10 -bottom-10 w-56 h-56 rounded-full bg-white/10" />
@@ -1086,9 +1287,9 @@ function ResultCard() {
           <span className="w-1.5 h-1.5 rounded-full bg-ink" />
           <span className="text-[10px] font-mono tracking-[0.25em] text-ink/80">SELLOUT REPORT</span>
         </div>
-        <div className="text-[13px] text-ink/80 mb-2">Lift de vendas · SKU</div>
-        <div className="num text-[72px] font-semibold leading-none tracking-[-0.04em]">até +19%</div>
-        <div className="mt-4 text-[12px] text-ink/80">mensurado em até <span className="font-semibold">14 dias</span></div>
+        <div className="text-[13px] text-ink/80 mb-2">{t.solucao.resultTitle}</div>
+        <div className="num text-[72px] font-semibold leading-none tracking-[-0.04em]">{t.solucao.resultBig}</div>
+        <div className="mt-4 text-[12px] text-ink/80">{t.solucao.resultSub1} <span className="font-semibold">{t.solucao.resultSub2}</span></div>
 
         <svg viewBox="0 0 120 40" className="mt-5 w-full h-10">
           <path d="M2 32 L20 28 L38 26 L56 22 L74 16 L92 10 L118 4" stroke="#181c28" strokeWidth="2" fill="none"/>
@@ -1112,41 +1313,21 @@ function MetricCell({ kicker, value, sub }) {
 // ---------- COMO FUNCIONA ----------
 function ComoFunciona() {
   const ref = useReveal();
-  const steps = [
-    {
-      n: '01',
-      icon: IconReceipt,
-      title: 'Aquisição de dados',
-      desc: 'Integramos dados transacionais de milhares de PDVs no nível de SKU, ticket, storechain e categoria. Base agnóstica ao varejista, cobertura continental.',
-      tags: ['SKU', 'STORECHAIN', 'TICKET', 'CATEGORY'],
-    },
-    {
-      n: '02',
-      icon: IconTarget,
-      title: 'Modelagem + ativação',
-      desc: 'Identificamos PDVs com maior potencial de lift de vendas. Definimos grupos exposto e controle. Ativamos mídia direcionada aos dispositivos certos.',
-      tags: ['EXPOSTO', 'CONTROLE', 'O2O', 'AUDIÊNCIA'],
-    },
-    {
-      n: '03',
-      icon: IconChart,
-      title: 'Lift de vendas',
-      desc: 'Comparamos desempenho entre exposto e controle. Medimos lift no SKU e na categoria. Resultado em vendas reais, mensurado em até 14 dias.',
-      tags: ['LIFT SKU', 'LIFT CATEGORIA', 'GMV', '14 DIAS'],
-    },
-  ];
+  const { t } = useLang();
+  const icons = [IconReceipt, IconTarget, IconChart];
+  const steps = t.como.steps.map((s, i) => ({ ...s, n: ['01', '02', '03'][i], icon: icons[i] }));
   return (
     <section id="como-funciona" ref={ref} className="relative bg-white text-ink py-28 md:py-36 overflow-hidden">
       <div className="max-w-7xl mx-auto px-5 md:px-8">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <SectionLabel dark label="03 / COMO FUNCIONA" />
+            <SectionLabel dark label={t.como.label} />
             <h2 className="reveal delay-1 mt-6 text-[36px] md:text-[56px] font-light leading-[1.02] tracking-[-0.02em] max-w-3xl">
-              Três etapas. <span className="font-semibold">Uma arquitetura</span> agnóstica ao varejista.
+              {t.como.h2a}<span className="font-semibold">{t.como.h2b}</span>{t.como.h2c}
             </h2>
           </div>
           <div className="reveal delay-2 text-[13px] text-ink/60 max-w-xs">
-            Dados de primeira parte, com consentimento e rastreáveis, do primeiro contato de mídia até a nota fiscal.
+            {t.como.note}
           </div>
         </div>
 
@@ -1182,56 +1363,19 @@ function ComoFunciona() {
 // ---------- CASOS DE USO ----------
 function Casos() {
   const ref = useReveal();
-  const cases = [
-    {
-      brand: 'McDonald\u2019s',
-      article: 'No',
-      hero: 'Coca-Cola',
-      vs: 'Big Mac',
-      stat: 173,
-      label: 'mais receita',
-      tag: 'Fast food',
-      color: '#DE2A25',
-      insight: 'A bebida complementar gera mais valor do que o item-âncora do menu.',
-      ranking: [
-        { name: 'Coca-Cola', score: 100, role: 'hero', note: 'Complementar' },
-        { name: 'Batata frita grande', score: 54, role: 'mid' },
-        { name: 'Big Mac', score: 37, role: 'anchor', note: 'Item-âncora' },
-      ],
-    },
-    {
-      brand: 'Swift',
-      article: 'Na',
-      hero: 'Picanha',
-      vs: 'Filet mignon',
-      stat: 266,
-      label: 'mais GMV',
-      tag: 'Açougue premium',
-      color: '#9b2020',
-      insight: 'O corte favorito do brasileiro supera alternativas mais caras em GMV total.',
-      ranking: [
-        { name: 'Picanha', score: 100, role: 'hero', note: 'Preferência local' },
-        { name: 'Alcatra', score: 48, role: 'mid' },
-        { name: 'Filet mignon', score: 27, role: 'anchor', note: 'Corte premium' },
-      ],
-    },
-    {
-      brand: 'Droga Raia',
-      article: 'Na',
-      hero: 'Ozempic',
-      vs: 'Novalgina',
-      stat: 343,
-      label: 'mais GMV',
-      tag: 'Farmácia',
-      color: '#0066B3',
-      insight: 'Medicamentos de prescrição crescente redesenham a receita da categoria.',
-      ranking: [
-        { name: 'Ozempic', score: 100, role: 'hero', note: 'Prescrição crescente' },
-        { name: 'Losartana', score: 42, role: 'mid' },
-        { name: 'Novalgina', score: 23, role: 'anchor', note: 'Alta rotação' },
-      ],
-    },
+  const { t } = useLang();
+  const base = [
+    { brand: 'McDonald\u2019s', hero: 'Coca-Cola', stat: 173, color: '#DE2A25', scores: [[100, 'hero'], [54, 'mid'], [37, 'anchor']] },
+    { brand: 'Swift', hero: 'Picanha', stat: 266, color: '#9b2020', scores: [[100, 'hero'], [48, 'mid'], [27, 'anchor']] },
+    { brand: 'Droga Raia', hero: 'Ozempic', stat: 343, color: '#0066B3', scores: [[100, 'hero'], [42, 'mid'], [23, 'anchor']] },
   ];
+  const cases = base.map((b, i) => {
+    const tr = t.casos.items[i];
+    return {
+      ...b, article: tr.article, label: tr.label, tag: tr.tag, vs: tr.vs, insight: tr.insight,
+      ranking: b.scores.map(([score, role], j) => ({ name: tr.ranking[j].name, note: tr.ranking[j].note, score, role })),
+    };
+  });
   const [active, setActive] = useState(0);
   const current = cases[active];
 
@@ -1240,14 +1384,14 @@ function Casos() {
       <div className="max-w-7xl mx-auto px-5 md:px-8">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <SectionLabel label="04 / CASOS DE USO" />
+            <SectionLabel label={t.casos.label} />
             <h2 className="reveal delay-1 mt-6 text-[36px] md:text-[56px] font-light leading-[1.02] tracking-[-0.02em] max-w-4xl">
-              O que os dados revelam quando você tem <span className="font-semibold">+550K notas fiscais</span>.
+              {t.casos.h2a}<span className="font-semibold">{t.casos.h2b}</span>{t.casos.h2c}
             </h2>
           </div>
           <div className="reveal delay-2 text-[11px] font-mono text-mute tracking-[0.15em] md:text-right">
-            AMOSTRA · MCDONALD’S · SWIFT · DROGA RAIA<br/>
-            MÉTODO · GROUNDFLOW SELLOUT DATA
+            {t.casos.meta1}<br/>
+            {t.casos.meta2}
           </div>
         </div>
 
@@ -1280,7 +1424,7 @@ function Casos() {
               </div>
               <div className="text-[15px] text-white/70 mb-3">{current.article} {current.brand},</div>
               <div className="text-[32px] md:text-[44px] font-light leading-[1.02] tracking-[-0.02em] mb-6">
-                <span className="font-semibold">{current.hero}</span> gera
+                <span className="font-semibold">{current.hero}</span> {t.casos.generates}
                 <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1">
                   <span className="num text-brand-500 font-semibold text-[72px] md:text-[96px] lg:text-[120px] leading-none">
                     +{current.stat}%
@@ -1288,7 +1432,7 @@ function Casos() {
                   <span className="text-[22px] md:text-[28px] lg:text-[36px]">{current.label}</span>
                 </div>
                 <span className="text-[20px] md:text-[24px] text-white/70 mt-3 block">
-                  que {current.vs}.
+                  {t.casos.than} {current.vs}.
                 </span>
               </div>
               <p className="text-[15px] text-mute max-w-md leading-relaxed">{current.insight}</p>
@@ -1298,8 +1442,8 @@ function Casos() {
           <div className="md:col-span-5 rounded-3xl bg-ink-2 border border-white/10 p-8 md:p-10 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-6">
-                <div className="text-[11px] font-mono text-mute tracking-[0.15em]">TOP SKUs POR RECEITA</div>
-                <div className="text-[10px] font-mono text-mute/60">ÍNDICE · 100 = LÍDER</div>
+                <div className="text-[11px] font-mono text-mute tracking-[0.15em]">{t.casos.topLabel}</div>
+                <div className="text-[10px] font-mono text-mute/60">{t.casos.indexLabel}</div>
               </div>
               <div className="space-y-5">
                 {current.ranking.map((item, idx) => (
@@ -1316,9 +1460,9 @@ function Casos() {
               </div>
             </div>
             <div className="pt-8 mt-8 border-t border-white/10">
-              <div className="text-[11px] uppercase tracking-[0.2em] text-mute mb-2">Amostra analisada</div>
+              <div className="text-[11px] uppercase tracking-[0.2em] text-mute mb-2">{t.casos.sampleLabel}</div>
               <div className="num text-[36px] font-semibold text-white">+550K</div>
-              <div className="text-[12px] text-mute mt-1">notas fiscais cross-retailer</div>
+              <div className="text-[12px] text-mute mt-1">{t.casos.sampleSub}</div>
             </div>
           </div>
         </div>
@@ -1368,32 +1512,26 @@ function RankingRow({ position, name, score, role, note, color }) {
 // ---------- ESTRATÉGIAS ----------
 function Estrategias() {
   const ref = useReveal();
-  const strats = [
-    { n: '01', icon: IconTarget, title: 'Conquistar market share',
-      desc: 'Audiência focada em locais onde sua marca perde market share. Foco: receita via novos compradores.',
-      color: 'cyan' },
-    { n: '02', icon: IconHeart, title: 'Fidelizar recorrentes',
-      desc: 'Audiência próxima a PDVs onde sua marca já lidera. Foco: aumentar consumo de clientes recorrentes.',
-      color: 'blue' },
-    { n: '03', icon: IconGrid, title: 'Cross-sell em SKUs',
-      desc: 'Audiência a partir de places com maior correlação entre produtos. Foco: vendas cruzadas.',
-      color: 'cyan' },
-    { n: '04', icon: IconBroadcast, title: 'Trade em PDVs',
-      desc: 'Audiência baseada em ativações de trade. Foco: canais com parcerias estratégicas.',
-      color: 'blue' },
+  const { t } = useLang();
+  const meta = [
+    { icon: IconTarget, color: 'cyan' },
+    { icon: IconHeart, color: 'blue' },
+    { icon: IconGrid, color: 'cyan' },
+    { icon: IconBroadcast, color: 'blue' },
   ];
+  const strats = t.estrategias.items.map((s, i) => ({ ...s, n: ['01', '02', '03', '04'][i], icon: meta[i].icon, color: meta[i].color }));
   return (
     <section id="estrategias" ref={ref} className="relative bg-white text-ink py-28 md:py-36">
       <div className="max-w-7xl mx-auto px-5 md:px-8">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <SectionLabel dark label="05 / ESTRATÉGIAS" />
+            <SectionLabel dark label={t.estrategias.label} />
             <h2 className="reveal delay-1 mt-6 text-[36px] md:text-[56px] font-light leading-[1.02] tracking-[-0.02em] max-w-3xl">
-              Uma arquitetura que impacta em <span className="font-semibold">receita incremental.</span>
+              {t.estrategias.h2a}<span className="font-semibold">{t.estrategias.h2b}</span>
             </h2>
           </div>
           <div className="reveal delay-2 text-[13px] text-ink/60 max-w-xs">
-            Quatro abordagens para construir audiências que geram impacto mensurável no PDV.
+            {t.estrategias.note}
           </div>
         </div>
 
@@ -1402,13 +1540,13 @@ function Estrategias() {
             <div key={s.n} className={"reveal delay-" + Math.min(4, i+1) +
               " relative bg-ink/[0.03] border border-ink/10 rounded-2xl p-7 hover:border-brand-600/40 hover:bg-ink/[0.06] transition-all group"}>
               <div className="flex items-center justify-between mb-10">
-                <span className="text-[11px] font-mono text-ink/50 tracking-[0.2em]">ESTRATÉGIA {s.n}</span>
+                <span className="text-[11px] font-mono text-ink/50 tracking-[0.2em]">{t.estrategias.kicker} {s.n}</span>
                 <s.icon className={s.color === 'cyan' ? "text-brand-500" : "text-brand-600"} width="24" height="24" />
               </div>
               <div className="text-[22px] font-medium leading-tight tracking-[-0.01em] text-ink mb-3">{s.title}</div>
               <p className="text-[13.5px] text-ink/70 leading-relaxed">{s.desc}</p>
               <div className="mt-8 pt-6 border-t border-ink/10 flex items-center justify-between">
-                <span className="text-[11px] font-mono text-ink/50 tracking-[0.15em]">FOCO</span>
+                <span className="text-[11px] font-mono text-ink/50 tracking-[0.15em]">{t.estrategias.focus}</span>
                 <IconArrowUpRight className="text-ink/40 group-hover:text-brand-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" width="18" height="18" />
               </div>
             </div>
@@ -1423,6 +1561,7 @@ function Estrategias() {
 function CTA() {
   const ref = useReveal();
   const { open: openContactModal } = useContactModal();
+  const { t } = useLang();
   return (
     <section id="cta" ref={ref} className="relative grid-bg py-32 md:py-48 overflow-hidden">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] glow-blue pointer-events-none" />
@@ -1430,28 +1569,28 @@ function CTA() {
 
       <div className="relative max-w-6xl mx-auto px-5 md:px-8 text-center">
         <div className="reveal text-[11px] uppercase tracking-[0.35em] text-brand-500 mb-8">
-          Pronto para começar?
+          {t.cta.eyebrow}
         </div>
         <h2 className="reveal delay-1 text-[44px] md:text-[80px] lg:text-[104px] font-light leading-[0.98] tracking-[-0.035em]">
-          O próximo grande passo
-          <span className="block font-semibold">da sua marca.</span>
+          {t.cta.h2a}
+          <span className="block font-semibold">{t.cta.h2b}</span>
         </h2>
         <p className="reveal delay-2 mt-8 text-[16px] md:text-[18px] text-mute max-w-xl mx-auto leading-relaxed">
-          Meça o impacto real da mídia no ponto de venda. Transforme cada transação em decisão de investimento.
+          {t.cta.prose}
         </p>
         <div className="reveal delay-3 mt-12 flex flex-col sm:flex-row items-center justify-center gap-3">
           <button
             type="button"
             onClick={() => openContactModal('footer_demo')}
             className="btn-primary inline-flex items-center gap-2 px-7 py-4 rounded-full bg-brand-500 text-ink font-medium text-[15px] hover:bg-[#3ec8f0] transition-colors">
-            Agende uma demo
+            {t.cta.demo}
             <IconArrowRight width="18" height="18" strokeWidth="2" />
           </button>
           <button
             type="button"
             onClick={() => openContactModal('footer_especialista')}
             className="inline-flex items-center gap-2 px-7 py-4 rounded-full border border-white/15 text-white hover:bg-white/5 transition-colors text-[15px]">
-            Fale com um especialista
+            {t.cta.especialista}
           </button>
         </div>
       </div>
@@ -1461,6 +1600,7 @@ function CTA() {
 
 // ---------- FOOTER ----------
 function Footer() {
+  const { t } = useLang();
   return (
     <footer className="bg-ink border-t border-white/5 py-16">
       <div className="max-w-7xl mx-auto px-5 md:px-8">
@@ -1473,36 +1613,36 @@ function Footer() {
               Real transactions. Smarter media.
             </p>
             <p className="text-mute/60 text-[13px] max-w-sm mt-4 leading-relaxed">
-              A camada de medição de vendas reais para a indústria de bens de consumo.
+              {t.footer.tagline}
             </p>
           </div>
           <div className="md:col-span-2">
-            <div className="text-[11px] uppercase tracking-[0.2em] text-mute/60 mb-4">Produto</div>
+            <div className="text-[11px] uppercase tracking-[0.2em] text-mute/60 mb-4">{t.footer.product}</div>
             <ul className="space-y-2 text-[13.5px] text-white/80">
-              <li><a href="#solucao" className="hover:text-brand-500">Solução</a></li>
-              <li><a href="#como-funciona" className="hover:text-brand-500">Como funciona</a></li>
-              <li><a href="#casos" className="hover:text-brand-500">Casos de uso</a></li>
+              <li><a href="#solucao" className="hover:text-brand-500">{t.footer.pSolucao}</a></li>
+              <li><a href="#como-funciona" className="hover:text-brand-500">{t.footer.pComo}</a></li>
+              <li><a href="#casos" className="hover:text-brand-500">{t.footer.pCasos}</a></li>
               <li><a href="https://map.groundflow.one" className="hover:text-brand-500 inline-flex items-center gap-1.5">Market Map <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M7 7h10v10" /></svg></a></li>
             </ul>
           </div>
           <div className="md:col-span-2">
-            <div className="text-[11px] uppercase tracking-[0.2em] text-mute/60 mb-4">Empresa</div>
+            <div className="text-[11px] uppercase tracking-[0.2em] text-mute/60 mb-4">{t.footer.company}</div>
             <ul className="space-y-2 text-[13.5px] text-white/80">
-              <li><a href="#" className="hover:text-brand-500">Sobre</a></li>
-              <li><a href="#" className="hover:text-brand-500">Blog</a></li>
-              <li><a href="#" className="hover:text-brand-500">Carreiras</a></li>
+              <li><a href="#" className="hover:text-brand-500">{t.footer.about}</a></li>
+              <li><a href="#" className="hover:text-brand-500">{t.footer.blog}</a></li>
+              <li><a href="#" className="hover:text-brand-500">{t.footer.careers}</a></li>
             </ul>
           </div>
           <div className="md:col-span-3">
-            <div className="text-[11px] uppercase tracking-[0.2em] text-mute/60 mb-4">Contato</div>
+            <div className="text-[11px] uppercase tracking-[0.2em] text-mute/60 mb-4">{t.footer.contact}</div>
             <ul className="space-y-2 text-[13.5px] text-white/80">
               <li>contato@groundflow.com.br</li>
-              <li>São Paulo · Brasil</li>
+              <li>{t.footer.place}</li>
             </ul>
           </div>
         </div>
         <div className="mt-14 pt-6 border-t border-white/5 flex flex-col md:flex-row gap-3 justify-between text-[12px] text-mute/60">
-          <div>© 2026 Groundflow · Todos os direitos reservados</div>
+          <div>{t.footer.rights}</div>
           <div>contato@groundflow.com.br</div>
         </div>
       </div>
@@ -1533,20 +1673,22 @@ function App() {
   }, []);
 
   return (
-    <ContactModalProvider>
-      <div>
-        <Nav />
-        <Hero />
-        <ContextBar />
-        <Problema />
-        <Solucao />
-        <ComoFunciona />
-        <Casos />
-        <Estrategias />
-        <CTA />
-        <Footer />
-      </div>
-    </ContactModalProvider>
+    <LangProvider>
+      <ContactModalProvider>
+        <div>
+          <Nav />
+          <Hero />
+          <ContextBar />
+          <Problema />
+          <Solucao />
+          <ComoFunciona />
+          <Casos />
+          <Estrategias />
+          <CTA />
+          <Footer />
+        </div>
+      </ContactModalProvider>
+    </LangProvider>
   );
 }
 
