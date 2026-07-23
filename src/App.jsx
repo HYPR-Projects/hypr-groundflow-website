@@ -603,6 +603,7 @@ function Nav() {
     ['#casos', 'Casos'],
     ['#estrategias', 'Estratégias'],
   ];
+  const MARKET_MAP_URL = 'https://map.groundflow.one';
 
   return (
     <>
@@ -629,6 +630,13 @@ function Nav() {
                 onClick={() => track('nav_click', { link: label, location: 'header_desktop' })}
                 className="hover:text-white transition-colors">{label}</a>
             ))}
+            <a
+              href={MARKET_MAP_URL}
+              onClick={() => track('nav_click', { link: 'Market Map', location: 'header_desktop' })}
+              className="inline-flex items-center gap-1.5 text-brand-500 hover:opacity-80 transition-opacity">
+              Market Map
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M7 7h10v10" /></svg>
+            </a>
           </div>
           <div className="flex items-center gap-2 ml-auto">
             <button
@@ -674,6 +682,15 @@ function Nav() {
                 {label}
               </a>
             ))}
+            <a
+              href={MARKET_MAP_URL}
+              onClick={() => { track('nav_click', { link: 'Market Map', location: 'mobile_menu' }); setMenuOpen(false); }}
+              className="inline-flex items-center gap-2 text-brand-500 text-[32px] font-light tracking-[-0.02em] py-3 border-b border-white/10 hover:opacity-80 transition-opacity"
+              style={{ transitionDelay: menuOpen ? `${links.length * 40}ms` : '0ms' }}
+            >
+              Market Map
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M7 7h10v10" /></svg>
+            </a>
           </div>
           <div className="mt-10 text-[11px] uppercase tracking-[0.3em] text-mute">
             contato@groundflow.com.br
@@ -1465,6 +1482,7 @@ function Footer() {
               <li><a href="#solucao" className="hover:text-brand-500">Solução</a></li>
               <li><a href="#como-funciona" className="hover:text-brand-500">Como funciona</a></li>
               <li><a href="#casos" className="hover:text-brand-500">Casos de uso</a></li>
+              <li><a href="https://map.groundflow.one" className="hover:text-brand-500 inline-flex items-center gap-1.5">Market Map <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M7 7h10v10" /></svg></a></li>
             </ul>
           </div>
           <div className="md:col-span-2">
